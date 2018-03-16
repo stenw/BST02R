@@ -1,0 +1,21 @@
+Package: BST02R
+Title: Supporting Material for the R Course of the NIHES (BST02)
+Version: 0.0.0.9000
+Authors@R: person("Sten", "Willemsen", email = "s.willemsen@erasmusmc.nl", role = c("aut", "cre"))
+Description: This package contains data, functions and quizes for the NIHES BST02 Course
+Depends: R (>= 3.2.0)
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Imports:
+  foreign,
+  learnr,
+  swirl,
+  Matrix,
+  lattice,
+  knitr,
+  ggplot2,
+  reshape2,
+  foreign,
+  xlsx
