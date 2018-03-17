@@ -1,0 +1,113 @@
+---
+title: "Vignette Title"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Basic parametric Statistical tests for continous data
+
+## Single sample
+
+The simplest situation in which we can do a statistical test is perhaps that where we have a sample from a population of an outcome which we assume to have a normal distribution. We want to test the null hypothesis if the mean of this population is equal to some value. For example let's assume that we want to test if the average IQ of children with a particular syndrome deviates from that of the population (defined to be 100). We have a sample of 10 IQ scores (The values obtained were  74, 87, 100, 75, 98, 74, 79, 103, 95 and 110). 
+So our null hypothesis is that the mean is 100 while the alternative hypothesis is that it is not. We decide that we will test the hypothesis using an alpha of 5%. (Of course we should have consulted a statistician to discuss the power of the test.) In R we can perform the test using the `t.test` function. 
+
+```{r onesamplet}
+IQs<-c(74, 87, 100, 75, 98, 74, 79, 103, 95, 110)
+t.test(IQs, mu=100) 
+```
+From the output we see that the average in the sample was 89.5 points a difference of more than 10 points from the value of 100 we compare against. The p-value is 0.035 so we can reject the null. We also see that the confidence interval of the sample average runs from 79.9 to 99.1 so our estimate based on this small sample is still rather imprecise. 
+
+## Two samples
+
+### Unpaired data
+Arguably the most common situation in which we perform a statistical test is when we have two independent groups for which we want to compare an outcome that is (approximately) normally distributed. In this situation we can use the two sample t-test for unrelated samples. Imagine we have conducted a trial in which we measure the pain score at follow-up between two treatment arms. The data from this trial is included in the data set `pain`. We can perform the two sample t-test for unpaired data using the same `t.test` command we used earlier.
+```{r}
+data(pain, package='BST02R')
+t.test(painfu ~ treatm ,data=pain)
+```
+From the output we see that the pain at follow-up was `r round(mean(pain$painfu[pain$treatm=='Placebo']))` in the active group while it was `r round(mean(pain$painfu[pain$treatm=='Placebo']))` for the patients that were given a placebo. If the null hypothesis that the mean pain score in the two groups is the same in the whole population would be true the probability of finding such a large difference would be very small as indicated by the p-value. So we reject the null hypothesis and conclude that the treatment helps to reduce pain.
+
+Actually here we performed the variant of the t-test that does not make the assumption that the variance in the outcome is the same in the groups that are compared (the Welch two sample t-test). The classical t-test that is found in most statistical textbooks actually does make this additional assumption. If we wanted to perform the test this way in R we could have done this using the extra argument `var.equal=TRUE`.
+
+
+
+### Paired data
+It is also interesting to see if the pain at follow-up is different from that at baseline. However here we cannot do this using the two sample t-test described above as the patents whose pain is measured at the follow-up are the same as those which are measured at baseline. For this we need the two sample t-test for *paired* data (which is actually the same as the one sample t-test performed at the difference between the pain levels at follow-up and baseline). Let's look at this in the Placebo group.
+```{r}
+data_placebo <- pain[pain$treatm=='Placebo',]
+with(data_placebo, t.test(x=painbl, y=painfu))
+```
+We see that the pain score is decreased by `r round(with(data_placebo, mean(painbl-painfu)),1)` points. So the difference is statistically significant.
+
+
+## More than two samples
+The independent samples t-test can be generalized to compare more than two groups. This is called ANOVA (ANalysis Of VAriance). The null hypothesis that is tested is that the group means are all equal. This hypothesis is tested by comparing the variance among the group means with the variance within each group (hence the name of the statistical technique).
+
+Let's use R to test if pain scores at baseline differ among the different ethnicities. 
+```{r}
+anova_eth <- aov(painbl ~ race, data=pain)
+summary(anova_eth)
+```
+So in this case we cannot reject the null; There is no evidence that the pain level differs among the ethnicities.
+
+# Basic parametric Statistical tests for categorical data
+
+If he data we want to compare is categorical instead of continuous we cannot use a t-test. However there are other tests that we can use. 
+
+
+## Single sample
+
+Say we want to test if the fraction of men in the trial is equal to 0.5 (so the proportion of men is the same as that of women). If R we can use the command `prop.test(x, n, p)`. Where `x` is the number of 'events' (that is women), `n` is the total number of individuals and `p` is the proportion we are comparing against. 
+
+```{r onesamplep}
+# frst make a cross table
+table(pain$sex)
+prop.test(sum(pain$sex=='Male'), n=NROW(pain), p = 0.5)
+```
+From the output we see that the fraction of men is actually 70% with a confidence interval from 60% to 79%.  So it is clear that the proportion is significantly higher than 50%. We could also have obtained the result by using the function `prop.test` on the frequency table.
+```{r onesamplepa, results=FALSE}
+prop.test(table(pain$sex))
+```
+
+## Two (or more) independant samples
+We can also use the function `prop.test` to compare a proportion between two groups. This test is called the chi square test. Let's compare whether the proportion of men is the same in the two arms of the trial.
+```{r chisq}
+(tab <- table(pain$treatm, pain$sex))
+prop.test(tab)
+```
+From the output we see that the proportion of men does not differ a lot between the arms. We cannot reject the null hypothesis of no difference.
+
+The same test can be used when we want to compare more than two groups.
+
+```{r chisq}
+(tab <- table(pain$race, pain$sex))
+prop.test(tab)
+```
+In this case we get a warning. This is because some of the (expected) counts in the cross table are very low. This makes the approximation of the distribution of the test statistic under the null rather inaccurate.
+
+
+## Two dependant samples
+
+When  we want to test paired proportions we can use the McNemar test.  Let's use this test to check if the proportion of people that have a pain score larger than 50 differers between baseline and follow-up.
+```{r mcnemar}
+pain$painbl50 <- pain$painbl > 50
+pain$painfu50 <- pain$painfu > 50
+
+(tab <- table(pain$painbl50, pain$painfu50))
+mcnemar.test(tab)
+```
+The McNemar test uses only the discordant pairs. The question is whether there are more people that have a high pain score at baseline and not at follow up than the other way around. Here this seems to be the case and we can reject the null that this proportion is the same.
+
