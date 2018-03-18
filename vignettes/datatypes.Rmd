@@ -1,0 +1,113 @@
+---
+title: "Data types"
+author: "Sten Willemsen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Importing data files
+
+If you want to learn to use R that is probably because you want to use it to analyse some data. So let's illustrate R based on a data set. We can download and import an SPSS data set containing data on an (imaginary) trial using: 
+```{r message=FALSE}
+library(foreign)
+mydata <- read.spss(file='https://github.com/stenw/bst02r/blob/master/data-raw/pain.sav?raw=true',
+                      to.data.frame = TRUE)
+```
+
+## data.frames
+
+When we have executed the command above the data set will be stored under the name `mydata`. `mydata` is a so called `data.frame`. This is a rectangular table in which every column contains a variable and every row an observation. The variable `mydata` will also appear in the environment tab in the upper right hand corner of RStudio. Right next to the name we can see how many observations and how many variables the `data.frame` has. We can examine the data set more closely by clicking the little icon next to it in this tab. An other way of looking at the data is my typing in the command `View(mydata)` directly in the Console tab.
+
+
+We see that the first four variables are the patient number, the treatment, the  gender and age of the patient(`ptno`, `treatm`, `sex` and `age`). In order to work with one of the variables in the `data.frame` we first type the name of the `data.frame` followed by a dollar sign, and finally the name of the variable inside the `data.frame`. So when we execute the command: `mydata$age` in the console the ages of all patients are displayed. We can calculate the average of them using the function `mean`.  
+
+```{r}
+mean(mydata$age)
+```
+
+## vectors en datatypes
+
+Each variable in the `data.frame mydata` is a so called vector. A vector is a number of values that each have the same data type (Or mode^[`mode`, `storage.mode` and `type` are closely related concepts, we will not discuss the differences here. See also `?mode`.]). The most important data types in R are:^[There are a few more which we will not discuss.]: 
+
+------------    ---------------------------------------------------
+        mode    description
+------------    ---------------------------------------------------    
+  character:    text, for example 'man', 'woman', 'censored', etc. 
+    logical:    TRUE and FALSE
+    numeric:    a numerical value like 1, 1.2 or 1e12 (that is 10 raised to the power of 12)
+       list:    See below
+-------------------------------------------------------------------
+
+Vectors of these data types are the most elementary data structure in R. Or all structures (like the `data.table`) are constructed using these vectors. In R there is also no structure that is smaller than a vector. A single number is not treated differently from a numeric vector of length ten; In fact R sees the single number simply as a numeric vector of length 1. The `length()` of a vector can be obtained by using the function `length()`.
+
+A vector can be created using the function `c()`. (The `c` stands for 'concatenate', 'coerce' or 'combine')
+
+```{r}
+c(1, 2, 3)
+c('spam', 'ham', 'eggs')
+c("double", "quotes", "work",
+  'like', 'single')
+c(TRUE, FALSE)
+```
+
+In the output we see that R shows the row number of the first element of each row between straight brackets. This makes it easier to refer to a particular element, especially when the vectors are long. We can work with vectors in the same way as with single numbers. In principle all operations are carried out in an element wise fashion.
+
+```{r}
+c(1, 2, 3) * c(4, 5, 6)
+```
+
+When we try to create a vector that consists of different data types they will be converted to a data type that is capable of containing all of them. For example: 
+
+```{r}
+c("eleven", 12)
+```
+
+The second element of the resulting vector is now also of type `character`. In general it is better not to trust this implicit conversion. Instead to it explicitly, in this case by using the function `as.character()`.
+
+## lists
+
+Elements of a vector are always of the same type. A `list` differs from a vector by also allowing its elements to be of a different type. We can make a `list` using the function `list`.
+
+```{r}
+lijst1 <- list("eleven", 12)
+lijst2 <- list(c(1, 2, 3), c('foo', 'bar'))
+```
+We can also assign a name to the elements of a list:
+
+```{r}
+lijst3 <- list(getallen=c(1, 2, 3), chars=c('foo', 'bar'))
+```
+
+
+It is also possible for a list to contain other lists.
+
+In many ways lists resemble data.frames. An important difference is that the length of all elements of a data.frame (that is the variables) must be the same. For a list this is not the case.
+
+## factors
+
+A `factor`is a special kind of vector for categorical data. The factor contains different integers one for every category. Each unique value has an associated 'label' that tell us what the code means. Factors are frequently used when we model categorical data. An advantage of a factor over a `character` is that we can limit the number of possible outcomes. It is also less likely to make mistakes due to typing errors.  Factors can be created by means of the function `factor()`.
+
+```{r}
+factor(c('man', 'vrouw', 'man'))
+```
+
+When a `factor` is displayed R also shows us the unique values the variable can take. These are called the 'levels' of the factor. 
+
+## Missing values
+
+Whenever the value of a variable is missing this is denoted by `NA` in R. Usually this means that the values exists however we do not know it. Sometimes the result of a calculation is not finite (for example when we define a positive or negative number by zero). In this case the result is defined to be `Inf` of `-Inf` in R.  When a value cannot be computed at all (for example when we divide zero by zero) R will define the result as `NaN`, which stands for 'Not a Number'. Finally, R sometimes uses the special value `NULL` to indicate that a variable is not yet defined. Here we will mostly deal with data that is just missing, that is  `NA`.   
+
+
+

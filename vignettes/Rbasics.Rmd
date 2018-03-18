@@ -1,0 +1,71 @@
+---
+title: "Basics of R"
+author: "Sten Willemsen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## R as a calculator
+
+One of the most simple things we can do with R is to use it as a kind of calculator. We can do all elementary arithmetic operations:
+
+    >1 + 1
+    [1] 2
+    >1 - 1
+    [1] 0
+    >2 * 3
+    [1] 6
+    >2 / 3
+    [1] 0.6666667
+
+Here we use '>' to denote the R prompt. It is used in the console to indicate that R is ready for a new command. The lines in between is the output given by R.
+
+A lot of the functionality in R comes from its functions. There are many functions we can use including the standard mathematical ones:
+   >cos(3.1415)
+   [1] -1
+   >exp(0)
+   [1] 1
+   >log(1)
+   [1] 0
+
+## Variables
+
+The results above are displayed but not stored. To do this we must give a name to the result. That is we store the result in a variable. The results are now no longer displayed but they are given a name that we can use later to refer to the value we stored in it.
+Assigning a result in a variable is done using `<-`. For example:
+
+    >five <- 3+3
+    > five
+    [1] 5
+    > five + 1
+    [1] 6
+    
+Each variable has a class that determines for a large extend what we can do with it. 
+
+## R packages and the library command
+
+As mentioned above R is a modular language that we can extend using packages. We can load a package using the command `library()`. So if we want to load the `survival` package (in order to do survival analysis ) we type:
+
+    >library(survival)
+
+Before we can load a library it must be installed. This can be done using the command `install.packages(packagename)` where `packagename` is the name of the package between single or double quotes. For example:
+
+    >install.packages('gamlss')
+    
+## Documentation
+
+The functions `help` en `?` can be used to read the documentation on a particular subject (mostly functions). The package in which the function is defined must be loaded. Using `help.search` and `??` we can search the documentation files in a more general way. 
+
+    >?library
+    >help(install.packages)
+    >help.search('logistic regression')
