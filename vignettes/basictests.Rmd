@@ -1,6 +1,6 @@
 ---
-title: "Vignette Title"
-author: "Vignette Author"
+title: "Basic statistical tests"
+author: "Sten Willemsen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -92,7 +92,7 @@ From the output we see that the proportion of men does not differ a lot between 
 
 The same test can be used when we want to compare more than two groups.
 
-```{r chisq}
+```{r chisqmult}
 (tab <- table(pain$race, pain$sex))
 prop.test(tab)
 ```
@@ -111,3 +111,4 @@ mcnemar.test(tab)
 ```
 The McNemar test uses only the discordant pairs. The question is whether there are more people that have a high pain score at baseline and not at follow up than the other way around. Here this seems to be the case and we can reject the null that this proportion is the same.
 
+![Flowchart](Flowchart.jpg)

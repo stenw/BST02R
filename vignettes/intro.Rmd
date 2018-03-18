@@ -1,0 +1,43 @@
+---
+title: "Introduction"
+author: "Sten Willemsen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Why R
+Currently R is the statistical package that of choice for statisticians. This popularity is due to the fact that it is focused on data analysis but it is also a complete programming language. This in contrast to on the one hand SPSS and SAS in which programming is very difficult to say the least and Python on the other hand which is a general programming language which is popular for data science but which not created for this purpose from the onset.  
+
+One characteristic of R that contributed to its popularity to a large extend is no doubt that the program is completely free of charge. Also its source code is publicly available and in the public domain. So, in principle, anybody can make changes to the language and suggest that these changes are also made to the public distribution. This also means that there is no publisher to whom to address  your questions. Fortunately there are enough other sources from which you can get support.
+
+The R language is modular: base R only has limited functionality, but this functionality can be extended by means of various packages. Nowadays there is an enormous amount of extension packages. And the number of packages still seems to be growing at an exponential rate. The quality of these packages varies although there is some kind of quality control on the packages distributed through the official channel [CRAN](https://cran.r-project.org/).  
+
+## Installation R and R studio
+Before we can work with R the program must be installed on the computer. It is recommended also to install a second program RStudio. This is a Integrated Development Environment (IDE) separated program that makes working with R much more user friendly. There are other IDEs available but we will only discuss RStudio here.
+
+R can be downloaded on [https://cran.r-project.org/](https://cran.r-project.org/).  For windows and Apple computer it is best to choose the so called binary distribution (which means that we do not have to build the program from its source files ourselves). For a windows PC click on 'download R for Windows'; The choose 'base' to download the installer. To start it simply open the download folder and double click the icon. Now you are requested to select the language in which you are guided through the various installation steps; This does not have any consequences for when we work with R itself. Now proceed with installation, usually the default options in the installer will suffice.      
+
+RStudio can be downloaded at [https://www.rstudio.com/products/RStudio](https://www.rstudio.com/products/RStudio/). On this page choose 'Download RStudio Desktop'  and then choose the free version. Now you can download the installer. Again navigate to the download folder and double click the installers icon to start the installation process.
+
+## Interface of RStudio
+When RStudio is opened the program window is divided in several parts (panels). A single panel can have several tabs which each a separate function. We will discuss the most important ones. 
+![](rstudiolayout.jpg) 
+
+At the bottom left you can find the R prompt (the Console); Here you can enter your commands and R will return its output.  RStudio remembers which commands were recently executed and with the arrow keys you can move back and forth through history. When you want to store your commands for a longer time this method will break down. What you need to do instead is to make an R script (or program).
+
+The top left panel shows the editor for these scripts. When RStudio is opened for the first time this panel dos not yet exist but it will pop-up whenever you open an existing script or when you press Ctrl-Shift-N to start working on a new script. A script is a sequence of commands, for example to carry out a statistical analysis. You can save a script by choosing 'save' or 'save as' from the 'file' menu. By working with scripts you can always see which commands were executed, and hence it is clear on what the conclusions of your analysis are based. Working with scripts is an important part of reproducible research.  An R-script usually has the extension .R. It is in essence a regular plain text file and this it can be opened in ant text editor.
+
+You can execute the script by pressing the keys Ctrl+Alt+R simultaneously. It is also possible to execute parts of a script by selecting them and pressing Ctrl-Enter. When pressing this key combination without selecting a part of the script but having the active cursor in a script window the line on which the cursor is located will be executed. It is possible to open several scripts at the same time. These will then be displayed in several tabs.
+
+At the bottom right panel there is a tab called 'Files' with all files in the working directory and a tab called 'Plots' in which the plots we create will be displayed. In the upper right panel there is also a tab called 'History' in which we can see all commands that recently have been executed. Here you will also find a tab called 'Environment' where all objects we created are listed. 
