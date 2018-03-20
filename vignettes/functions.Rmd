@@ -1,0 +1,114 @@
+---
+title: "Functions"
+author: "Sten Willemsen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+library(BST02R)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+data(pain)
+mydata <- pain
+```
+
+## What are functions
+
+We have seen many examples of functions earlier in the course. For example `read.spss` to read spss data or `mode` to learn about an objects storage mode.  One could say that the functionality of `R` stems from the many functions that are available. So what exactly is a function? Actually a function is just a piece of code - that is a part of a program - that has peen given a name so it can be reused whenever necessary. 
+
+In R a function definition looks as follows. 
+```
+function (arguments) {
+  body
+}
+```
+The *body* of the code consists for the code we want to execute. We will later come back to the function arguments.
+
+## Using functions
+
+Let's say that we want to compute some summary statistics (the `mean` and the `sd`). Because there can be some outliers it is decided that the smallest and largest values are removed before computing these statistics. We can do this using the code
+
+```{r,eval=FALSE}
+x <- sort(x)
+x <- x[c(-1, -length(x))]
+rv <- list(mean=mean(x), sd=sd(x))
+```
+Because we pan to use this code several times for different variables we decide to turn it into a function^[Normally such a function would also contain some code to check for errors in the input values but we omit that here for simplicity].  
+```{r}
+ sum_stats <- function(x){
+   x <- sort(x)
+   x <- x[c(-1, -length(x))]
+   list(mean=mean(x), sd=sd(x))
+ }
+```
+Now we can use this function every time we want to compute the summary statistics:
+```{r}
+sum_stats(mydata$age)
+```
+When we call the function the parameter `x` in the body of the function is replace by the argument `mydata$age` in the function call. The last value in the body of the function is the return value of the function. It can be printed, stored in a variable or used in further calculations.
+```{r}
+the_summary <- sum_stats(mydata$age)
+```
+We can make the value that is returned explicit by using the return _keyword_. In this way the value that is return does not have to be the last line of the function.
+```{r}
+ sum_stats <- function(x){
+   x <- sort(x)
+   x <- x[c(-1, -length(x))]
+   rv <- list(mean=mean(x), sd=sd(x))
+   return(rv)
+ }
+```
+
+
+## Functions with multiple arguments
+It is also possible to create functions with multiple arguments:
+```{r}
+sum_stats <- function(x, outliers){
+   x <- sort(x)
+   x <- x[c(-(1:outliers), -((length(x)-outliers+1):length(x)))]
+   rv <- list(mean=mean(x), sd=sd(x))
+   return(rv)
+}
+sum_stats(mydata$age, 2)
+```
+Whenever there are multiple parameters it might be difficult remember which parameter does what. This is why we can also use the names of the parameter in the function call. When we do this we also are more flexible in the order in which we specify the arguments. When the name is not specified the position is still determinative.
+```{r}
+sum_stats(mydata$age, outliers=2)
+sum_stats(outliers=2, mydata$age)
+```
+
+## Lexical scoping
+
+When a function tries to use a variable that is not one of the parameters and is not determined elsewhere in the function. It looks for the variable the the environment in which the function was defined. This can be the global environment (basically everything outside function definitions) or an other function if the functions are nested. We try to illustrate this with some examples
+```{r}
+f <- function(x){
+  x+y
+}
+y<-5
+f(2)
+f <- function(x){
+  y<-2
+  g <- function(z){
+    z+y
+  }
+  g(x)
+}
+f(2)
+f <- function(x){
+  y<-x
+  g <- function(z){
+    z+y
+  }
+  g
+}
+h <- f(10)
+y <-20
+h(2)
+```
