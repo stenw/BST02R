@@ -1,0 +1,95 @@
+---
+title: "R plots"
+author: "Plots"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+library(BST02R)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+data(pain)
+mydata <- pain
+```
+
+Often you get more information about a data.set by making graphs than by making tables. Here we will show some basic commands that R provides for this.
+
+## Histograms
+
+If we want to learn something about the distribution of a single variable we can make a histogram. In R this is done using the function `hist`. Let's look at the pain score at the follow-up.
+
+```{r hist1}
+hist(mydata$painfu)
+```
+If we run this code in RStudio the plot is displayed in the bottom righthand corner. From there we can save the plot as an pdf, or image file by clicking 'export' if we want to keep it. We can have more control over the number of bins that is used by using the `breaks` parameter. 
+
+```{r hist2}
+hist(mydata$painfu, breaks=20)
+hist(mydata$painfu, breaks=seq(0,80,5))
+```
+
+## Pie charts, bar charts and dot charts
+
+When we look at a  single categorical variable a pie chart is often used how the observations are devided over the levels of the variable. The `pie` function takes a numeric vector of frequencies as input (together with a set of labels). It is often more convinient to work with a table.:
+
+```{r pie}
+pie(c(2, 4, 6), labels=c('foo', 'bar', 'buz') )
+pie(table(mydata$race))
+```
+
+Some people recommend against using pie charts because people are bad at judging relative areas. Often a so called dotchrt is suggested as an alternative. 
+```{r dotchart1}
+dotchart(c(2, 4, 6), labels=c('foo', 'bar', 'buz') )
+dotchart(c(table(mydata$race)))
+```
+Note that we were required to transform the table to a vector by using the function `c`. Instead of a vector we can also use a matrix (or a two dimensional table which can REadily be converted to it) as input for the function.
+```{r dotchart2}
+dotchart(table(mydata$race, mydata$sex))
+```
+
+An other alternative for this type of data is a barchart (which resembles a histogram but the x-axis is not a continuous scale but instead represents the different levels of the variable). In R we use the command `barplot`. The names of the categories are now specified using the parameter 'names.arg' instead of 'labels'.
+```{r barchart1}
+barplot(c(2, 4, 6), names.arg =c('foo', 'bar', 'buz')  )
+barplot(table(mydata$race))
+```
+We can also use a matrix or 2-dimensional table.
+```{r dotchart2}
+barplot(table(mydata$race, mydata$sex))
+```
+It would be better to add a legend to the plot to explain what the colors mean. We will come back to that later. It is also possible to unstack the different cattegories using
+```{r dotchart2}
+barplot(table(mydata$race, mydata$sex),beside = TRUE)
+```
+## Scatterplots
+
+If we want to look at the relation between two variables we can use the plot command to make a scatter plot.
+```{r}
+plot(mydata$height, mydata$weight)
+```
+
+If we use only a single input vector the values are plotted against the observation numbers (which is not very useful here).
+```{r}
+plot(mydata$height)
+```
+Sometimes we want to study the relation ship between several continuous variables at the same time. In this case we can make a scatterplot matrix. As the name implies this is basically a matrix of scatterplots with the scatterplots of all pairwise combinations of variables as off-diagonal elements.
+```{r}
+pairs(~height+weight+painbl, data=mydata)
+```
+
+## Common elements to plot commands
+
+The plots above were very basic and we can do much to improve them. A nummer of arguments is common to most of the ploting commands discussed above and I will discuss them here. 
+
+### col
+The parameter `col` can often be used to specify what collor to use to plot something. There are several ways do do this. The first is by using the name of the color.
+```{r}
+plot(mydata$height, col='red')
+```
+
