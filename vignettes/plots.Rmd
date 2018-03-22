@@ -20,6 +20,11 @@ mydata <- pain
 ```
 
 Often you get more information about a data.set by making graphs than by making tables. Here we will show some basic commands that R provides for this.
+In R there are several packages for creating plots. The main ones are:
+    * graphics
+    * lattice
+    * ggplot2
+Here we will discuss the base graphics from the graphics library. These plotting functions can be divided in two types. The so called higher-level plotting functions and the lower-level plotting functions. The distinction is that the former create a more or less complete plot while the latter perform very specific functions (added specific points at certain locations, adding a legend and so on). Often we build complicated functions step by step by first using a higher-level plotting function and then adding thing to it using lower-level plotting functions.
 
 ## Histograms
 
@@ -28,7 +33,7 @@ If we want to learn something about the distribution of a single variable we can
 ```{r hist1}
 hist(mydata$painfu)
 ```
-If we run this code in RStudio the plot is displayed in the bottom righthand corner. From there we can save the plot as an pdf, or image file by clicking 'export' if we want to keep it. We can have more control over the number of bins that is used by using the `breaks` parameter. 
+If we run this code in RStudio the plot is displayed in the bottom right-hand corner. From there we can save the plot as an pdf, or image file by clicking 'export' if we want to keep it. We can have more control over the number of bins that is used by using the `breaks` parameter. 
 
 ```{r hist2}
 hist(mydata$painfu, breaks=20)
@@ -37,24 +42,24 @@ hist(mydata$painfu, breaks=seq(0,80,5))
 
 ## Pie charts, bar charts and dot charts
 
-When we look at a  single categorical variable a pie chart is often used how the observations are devided over the levels of the variable. The `pie` function takes a numeric vector of frequencies as input (together with a set of labels). It is often more convinient to work with a table.:
+When we look at a  single categorical variable a pie chart is often used how the observations are divided over the levels of the variable. The `pie` function takes a numeric vector of frequencies as input (together with a set of labels). It is often more convenient to work with a table.:
 
 ```{r pie}
 pie(c(2, 4, 6), labels=c('foo', 'bar', 'buz') )
 pie(table(mydata$race))
 ```
 
-Some people recommend against using pie charts because people are bad at judging relative areas. Often a so called dotchrt is suggested as an alternative. 
+Some people recommend against using pie charts because people are bad at judging relative areas. Often a so called dotchart is suggested as an alternative. 
 ```{r dotchart1}
 dotchart(c(2, 4, 6), labels=c('foo', 'bar', 'buz') )
 dotchart(c(table(mydata$race)))
 ```
-Note that we were required to transform the table to a vector by using the function `c`. Instead of a vector we can also use a matrix (or a two dimensional table which can REadily be converted to it) as input for the function.
+Note that we were required to transform the table to a vector by using the function `c`. Instead of a vector we can also use a matrix (or a two dimensional table which can readily be converted to it) as input for the function.
 ```{r dotchart2}
 dotchart(table(mydata$race, mydata$sex))
 ```
 
-An other alternative for this type of data is a barchart (which resembles a histogram but the x-axis is not a continuous scale but instead represents the different levels of the variable). In R we use the command `barplot`. The names of the categories are now specified using the parameter 'names.arg' instead of 'labels'.
+An other alternative for this type of data is a bar chart (which resembles a histogram but the x-axis is not a continuous scale but instead represents the different levels of the variable). In R we use the command `barplot`. The names of the categories are now specified using the parameter 'names.arg' instead of 'labels'.
 ```{r barchart1}
 barplot(c(2, 4, 6), names.arg =c('foo', 'bar', 'buz')  )
 barplot(table(mydata$race))
@@ -63,7 +68,7 @@ We can also use a matrix or 2-dimensional table.
 ```{r dotchart2}
 barplot(table(mydata$race, mydata$sex))
 ```
-It would be better to add a legend to the plot to explain what the colors mean. We will come back to that later. It is also possible to unstack the different cattegories using
+It would be better to add a legend to the plot to explain what the colors mean. We will come back to that later. It is also possible to unstack the different categories using
 ```{r dotchart2}
 barplot(table(mydata$race, mydata$sex),beside = TRUE)
 ```
@@ -78,18 +83,112 @@ If we use only a single input vector the values are plotted against the observat
 ```{r}
 plot(mydata$height)
 ```
-Sometimes we want to study the relation ship between several continuous variables at the same time. In this case we can make a scatterplot matrix. As the name implies this is basically a matrix of scatterplots with the scatterplots of all pairwise combinations of variables as off-diagonal elements.
+Sometimes we want to study the relation ship between several continuous variables at the same time. In this case we can make a scatter plot matrix. As the name implies this is basically a matrix of scatter plots with the scatter plots of all pairwise combinations of variables as off-diagonal elements.
 ```{r}
 pairs(~height+weight+painbl, data=mydata)
 ```
 
 ## Common elements to plot commands
 
-The plots above were very basic and we can do much to improve them. A nummer of arguments is common to most of the ploting commands discussed above and I will discuss them here. 
+The plots above were very basic and we can do much to improve them. A number of arguments is common to most of the ploting commands discussed above and I will discuss them here. 
+
+Another way to set these plotting parameters is through the function `par`. Some of the plotting paramaters (like `mar` and `mfrow`) can even only be set in this fashion. 
 
 ### col
-The parameter `col` can often be used to specify what collor to use to plot something. There are several ways do do this. The first is by using the name of the color.
+The parameter `col` can often be used to specify what collor to use to plot something. There are several ways do do this. The first is by using the name of the color. You can see all available color names by specifying the `colors()` function.  
 ```{r}
 plot(mydata$height, col='red')
+```
+We can also use integers to specify the colors. The integers refer to positions in the current color palette. By default 1 is black, 2 is red, 3 is green, 4 is blue, 5 is cyan, 6 is magenta, 7 is yellow and 8 is grey. The color palette can be viewed or changed using the `palette` function. 
+Finally we can specify colors by using a string representing the hexadecimal (16-base) color values. Basically this is a string where the first two characters indicate how strong the red signal is on a scale from 0-255 the next two characters indicate how strong the green signal is and the last two characters indicate how strong the blue signal is.
+```{r}
+plot(mydata$height, col='#AA11AA')
+```
+
+### pch
+pch indicates the 'plot character'. Usually an integer is used. Each number stands for a specific symbol.
+```{r pch}
+plot(x=1:16, 1:16, pch=1:16)
+```
+
+### cex
+This parameter specifies how large symbols and text should be. 
+```{r pch}
+plot(x=seq(-1,1,0.25), y=seq(-1,1,0.25), cex=exp(seq(-1,1,0.25)))
+```
+
+### lwd
+The parameter lwd indicates how thick the lines should be.
+
+### lty
+This parameter indicates the line type: 1 is solid, 2 is dashed and 3 dotted. More complex patterns are also possible (see ?par).
+
+### xlim / ylim
+Limits of the x and y axis. By default a little bit of extra space is added so the extreme values do not fall at the very edge of the plot.
+
+### xlab / ylab
+Labels of the x and y axis
+
+### main
+This parameter can be used to set the title of a plot. It is an alternative for the title command (See below).
+
+### mar
+This graphical parameter indicates the size of the margins in the plot. The argument should take the form of a numerical vector of length 4 (exactly). The margins should be specified in the order: lower margin, left margin, upper margin and right margin. Note that this parameter can only be set using `par`.
+
+### mfow
+This parameter controls the number of subplots. Normally there is only a single subplot but this can be changed. The parameter `mfow` takes a vector of length 2. The first number specifies the number of rows of subfigures and the second the number of columns of subfigures.
+```{r}
+opar <- par(mfrow=c(1, 2))
+hist(mydata$height, col='red')
+hist(mydata$weight, col='blue')
+par(opar)
+```
+Notice how the return value of the par function can be used to restore all plotting parameters to their defaults.
+ 
+
+## some lower-level plot functions
+As mentioned above the lower-level plot functions do not create a complete plot but instead they perform a very specific task. Examine the code below and the resulting plot. Most commands should be relatively self explanatory. Otherwise you can always use the documentation.
+
+```{r pch}
+plot.new()
+plot.window(xlim=c(-10,10), ylim=c(-10, 10)) 
+points(c(-3, 4), c(3, -4), col= 'red')
+lines(c(4, -7), c(7, -4), lwd=2,
+      col= 'hotpink')
+segments(x0=c(-4, -4), x1=c(3,-3), y0=c(3,2), y1=c(8,-8),
+         col='steelblue')
+polygon(c(4,4,-4,-4), c(-1,1,1,-1), 
+        border = 'blue', col = '#BBBBBBBB', lwd=2)
+abline(v=0, lty=2, lwd=2, col='grey50') # vertical line x=0
+abline(h=0, lty=2, lwd=2, col='grey50') # horizontal line y=0
+abline(a=0, b=0.5, col='orange') # line denifed by y=a+bx
+title('my work of art')
+axis(side = 1, at = seq(-10,10, 2),
+     labels=paste('x=',seq(-10,10, 2)))
+```
+
+### Illustration of a the creation of a (somewhat) complicated plot
+
+While the plot above shows a lot of different low-level commands. The resulting plot is not very useful. Below we show a more practical example: some code that was used to generate an illustrate of the normal distribution.
+```{r}
+x <- seq(-3.5, 3.5, 0.005)
+y <- dnorm(x, 0,1)
+par(mar=c(4.6,4.1,0.1,0.1), cex=1.5)
+plot(x=x,y=y, col='darkblue', type='l', lwd=3,
+     xlab='Observed value (SDs from mean)', ylab='density')
+q <- qnorm(0.025, 0, 1)
+p <- dnorm(q, 0, 1)
+abline(h=0)
+
+cord.x <- c(-3.5, seq(-3.5, q, 0.005),  q)
+cord.y <-c(0, dnorm(seq(-3.5,q, 0.005),0,1),0)
+polygon(cord.x,cord.y,col='#BABA5555')
+cord.x <- c(3.5, seq(3.5, -q, -0.005),  -q)
+cord.y <-c(0, dnorm(seq(3.5,-q, -0.005),0,1),0)
+polygon(cord.x,cord.y,col='#BABA5555')
+
+lines(x=c(q, q), y=c(0, p), col= 'orange', lwd=2 )
+lines(x=c(-q, -q), y=c(0, p), col= 'orange', lwd=2 )
+
 ```
 
