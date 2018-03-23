@@ -28,7 +28,7 @@ As an example we will work with age variable in the `data.frame mydata` ; So let
 ages <- mydata$age
 ```
 
-### Selecties maken gebaseerd op positie in een vector
+### Making selections based on the position a a vector
 The easiest way of selecting elements in a vector is by using the position of the elements in the vector. This can be done by providing the positions of the elements we want to select between square brackets after the name of the vector. So when we want to select the age of the first patient we can run the following code:
 ```{r}
 ages[1]
@@ -78,14 +78,14 @@ mydata[c(-3,-4), 'sex'] # Negative numbers and names can also be used
 ```
 We have to be careful when we want to select a single variable from a  `data.frame`, as we do above. The result will now no longer be a  `data.frame` but it is transformed to a `vector`. When we want to prevent this we can use `drop=FALSE`, as follows:
 ```{r}
-mydata[, 3, drop=FALSE]       # data.frame met een variabele
+mydata[, 3, drop=FALSE]       # data.frame with a single variabele
 ```
 
-### Dubelle haken en het dollarteken
+### Double brackets and the dollar sign
 
 There is another way to select a variable from a `data.frame` which we have seen before, that is we can use the dollar sign ('$'). When we use this the result is always a vector. 
 ```{r} 
-mydata$treatm      # data.frame met een variabele
+mydata$treatm      # a vector
 ```
 Instead of using the dollar sign we can use double square brackets. We now need to put the name between quotes like for single square brackets. We can also use the position of the variable using these double square brackets.
 ```{r}
@@ -95,7 +95,7 @@ mydata[[1]]
 It is not possible to select more than one element using double brackets; The result will always be a vector (instead of a `data.frame`)
 
 
-## Selecties maken in een list
+## Making selections in a list
 To make selections in a list, we can use single square brackets, double square brackets and the dollar sign. The use of single square brackets works in the same way as it does for vectors.
 ```{r}
 mylist <- list(
