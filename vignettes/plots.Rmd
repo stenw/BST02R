@@ -65,11 +65,11 @@ barplot(c(2, 4, 6), names.arg =c('foo', 'bar', 'buz')  )
 barplot(table(mydata$race))
 ```
 We can also use a matrix or 2-dimensional table.
-```{r dotchart2}
+```{r barplot1}
 barplot(table(mydata$race, mydata$sex))
 ```
 It would be better to add a legend to the plot to explain what the colors mean. We will come back to that later. It is also possible to unstack the different categories using
-```{r dotchart2}
+```{r barplot2}
 barplot(table(mydata$race, mydata$sex),beside = TRUE)
 ```
 ## Scatterplots
@@ -113,7 +113,7 @@ plot(x=1:16, 1:16, pch=1:16)
 
 ### cex
 This parameter specifies how large symbols and text should be. 
-```{r pch}
+```{r cex}
 plot(x=seq(-1,1,0.25), y=seq(-1,1,0.25), cex=exp(seq(-1,1,0.25)))
 ```
 
@@ -149,7 +149,7 @@ Notice how the return value of the par function can be used to restore all plott
 ## some lower-level plot functions
 As mentioned above the lower-level plot functions do not create a complete plot but instead they perform a very specific task. Examine the code below and the resulting plot. Most commands should be relatively self explanatory. Otherwise you can always use the documentation.
 
-```{r pch}
+```{r lowerlevel}
 plot.new()
 plot.window(xlim=c(-10,10), ylim=c(-10, 10)) 
 points(c(-3, 4), c(3, -4), col= 'red')
