@@ -71,15 +71,14 @@ barplot(table(mydata$race))
 
 We can also use a matrix or 2-dimensional table.
 
-```{r dotchart2}
+```{r barplot1}
 barplot(table(mydata$race, mydata$sex))
 ```
-It would be better to add a legend to the plot to explain what the colors mean. We will come back to that later. It is also possible to unstack the different categories using:
 
-```{r dotchart2}
+It would be better to add a legend to the plot to explain what the colors mean. We will come back to that later. It is also possible to unstack the different categories using
+```{r barplot2}
 barplot(table(mydata$race, mydata$sex),beside = TRUE)
 ```
-
 
 ## Scatterplots
 
@@ -126,7 +125,7 @@ plot(x=1:16, 1:16, pch=1:16)
 
 ### cex
 This parameter specifies how large symbols and text should be. 
-```{r pch}
+```{r cex}
 plot(x=seq(-1,1,0.25), y=seq(-1,1,0.25), cex=exp(seq(-1,1,0.25)))
 ```
 
@@ -146,7 +145,7 @@ Labels of the x and y axis
 This parameter can be used to set the title of a plot. It is an alternative for the `title` command (See below).
 
 ### mar
-This graphical parameter indicates the size of the margins in the plot. The argument shouabline(ld take the form of a numerical vector of length 4 (exactly). The margins should be specified in the order: lower margin, left margin, upper margin and right margin. Note that this parameter can only be set using `par`.
+This graphical parameter indicates the size of the margins in the plot. The argument should take the form of a numerical vector of length 4 (exactly). The margins should be specified in the order: lower margin, left margin, upper margin and right margin. Note that this parameter can only be set using `par`.
 
 ### mfow
 This parameter controls the number of subplots. Normally there is only a single subplot but this can be changed. The parameter `mfow` takes a vector of length 2. The first number specifies the number of rows of subfigures and the second the number of columns of subfigures.
@@ -188,7 +187,7 @@ Draws line segments from the points (x0, y0) to (x1, y1). Unlike the function `l
 
 Examine the code below and the resulting plot. We use many of the above functions and some additional ones. Most commands should be relatively self explanatory. Otherwise you can always use the documentation.
 
-```{r pch}
+```{r lowerlevel}
 plot.new()
 plot.window(xlim=c(-10,10), ylim=c(-10, 10)) 
 points(c(-3, 4), c(3, -4), col= 'red')
@@ -209,7 +208,6 @@ axis(side = 1, at = seq(-10,10, 2),
 ### Illustration of a the creation of a (somewhat) complicated plot
 
 While the plot above shows a lot of different low-level commands. The resulting plot is not very useful. Below we show a more practical example: some code that was used to generate an illustrate of the normal distribution.
-
 
 ```{r}
 x <- seq(-3.5, 3.5, 0.005)
