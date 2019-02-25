@@ -4,6 +4,9 @@ output:
   learnr::tutorial:
     progressive: true
     allow_skip: true
+tutorial:
+  id: "io.shinyapps.erasmusmc.bst02tutorial1"
+  version: 0.92    
 runtime: shiny_prerendered
 ---
 

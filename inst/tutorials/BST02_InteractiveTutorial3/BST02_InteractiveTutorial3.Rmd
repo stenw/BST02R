@@ -5,6 +5,9 @@ output:
     progressive: true
     allow_skip: true
 runtime: shiny_prerendered
+tutorial:
+  id: "io.shinyapps.erasmusmc.bst02tutorial3"
+  version: 0.923
 ---
 
 ```{r setup, include=FALSE}
