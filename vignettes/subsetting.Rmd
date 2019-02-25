@@ -19,7 +19,7 @@ data(pain)
 mydata <- pain
 ```
 
-Often we want to calculate some things only for a specific subgroup of our patient group. (For example we want to calculate the average for the variables  age and weight, but only for the women in the data set and not for the men). So it is important to select specific variables and observations. In R making these selections is called indexing. We start by showing how we can make selections within a single variable (a vector). Afterwards we will see how selecting variables and observations in a `daa.frame` works.
+Often we want to calculate some things only for a specific subgroup of our patient group. (For example we want to calculate the average for the variables  age and weight, but only for the women in the data set and not for the men). So it is important to select specific variables and observations. In R making these selections is called indexing. We start by showing how we can make selections within a single variable (a vector). Afterwards we will see how selecting variables and observations in a `data.frame` works.
 
 ## Indexing a vector
 
@@ -28,7 +28,7 @@ As an example we will work with age variable in the `data.frame mydata` ; So let
 ages <- mydata$age
 ```
 
-### Selecties maken gebaseerd op positie in een vector
+### Making selections based on the position in a vector
 The easiest way of selecting elements in a vector is by using the position of the elements in the vector. This can be done by providing the positions of the elements we want to select between square brackets after the name of the vector. So when we want to select the age of the first patient we can run the following code:
 ```{r}
 ages[1]
@@ -38,10 +38,19 @@ We can also do this for multiple elements at the same time.
 selection <- ages[c(2, 3)]
 selection
 ```
-When we use a vector with negative integers we will select all observations *execpt* those on the specified positions. So if we want to select all the ages except for the first three we can use.
+
+The vector of indices does not have to be sorted and indices may be duplicated. For example:
+
+```{r}
+selection[c(2, 1, 1)]
+```
+
+When we use a vector with negative integers we will select all observations *except* those on the specified positions. So if we want to select all the ages except for the first three we can use.
 ```{r}
 ages[-c(1, 2, 3)]
 ```
+
+It is not possible to combine positive and negative indices this way.
 
 ### Selections based on a condition (TRUE / FALSE)
 
@@ -50,11 +59,24 @@ The second way to select elements from a vector is by using a vector of logical 
 some_values<- c('foo', 'bar', 'baz')
 some_values[c(TRUE, FALSE, TRUE)]
 ```
-This way of selecting is especially useful when we use some comparison to select variables.
+This way of selecting is especially useful when we use some comparison or condition to select variables.
 ```{r}
 ages[mydata$sex=='Female']
 mydata$ptno[ages>65]
 ```
+
+Often the conditions are based on the comparison operators:
+| Operator | Meaning                  |
+|----------|--------------------------|
+| ==       | Equal to                 |
+| !=       | Not equal to             |
+| >        | Greater than             |
+| <        | Smaller than             |
+| >=       | Greater than or equal to |
+| <=       | Smaller than or equal to |
+
+
+Conditions can be combined using `&` (and) and  `|` or. Finally there is the logical negation operator `!` ()
 
 ### Making selections using names
 When the elements in a vector all have a name we can use these names to select the elements.
@@ -63,39 +85,8 @@ bp_with_name <- c(sys=135, dia=85)
 bp_with_name['dia']
 ```
 
-## Selecting observations and variables in a `data.frame`
+## Making selections in a list
 
-Selecting observations and variables in a `data.frame` works more or less the same for `data.frames` as it does for vectors. However because a `data.frame` is two dimensional we need two indices between the square brackets. The first one corresponds to the observations (rows) and the second corresponds to the variables (columns). So, as an example, we can select the first two observations from the third variable in the `data.frame` using the syntax:
-```{r}
-mydata[c(1, 2), 3]
-```
-
-When the first or second position is left blank all rows or columns are selected. For example:
-```{r}
-mydata[, 3]       # sex (3rd variable) for all patients
-mydata[c(1,2), ]  # all variables for the first two patients
-mydata[c(-3,-4), 'sex'] # Negative numbers and names can also be used
-```
-We have to be careful when we want to select a single variable from a  `data.frame`, as we do above. The result will now no longer be a  `data.frame` but it is transformed to a `vector`. When we want to prevent this we can use `drop=FALSE`, as follows:
-```{r}
-mydata[, 3, drop=FALSE]       # data.frame met een variabele
-```
-
-### Dubelle haken en het dollarteken
-
-There is another way to select a variable from a `data.frame` which we have seen before, that is we can use the dollar sign ('$'). When we use this the result is always a vector. 
-```{r} 
-mydata$treatm      # data.frame met een variabele
-```
-Instead of using the dollar sign we can use double square brackets. We now need to put the name between quotes like for single square brackets. We can also use the position of the variable using these double square brackets.
-```{r}
-mydata[['treatm']]
-mydata[[1]]
-```
-It is not possible to select more than one element using double brackets; The result will always be a vector (instead of a `data.frame`)
-
-
-## Selecties maken in een list
 To make selections in a list, we can use single square brackets, double square brackets and the dollar sign. The use of single square brackets works in the same way as it does for vectors.
 ```{r}
 mylist <- list(
@@ -120,5 +111,41 @@ mode(mylist[[1]]) # a vector
 mode(mylist[1])   # a list with with a numeric vector as its single element   
 ```
 
+There is another way to select a variable from a `list` which is by using the dollar sign ('$'). This is an alternative to using double square brackets in combination with a name. When we use this the result is always a vector. 
 
+```{r} 
+mylist$foo      # results is a vector
+```
+Instead of using the dollar sign we can use double square brackets. We now need to put the name between quotes like for single square brackets. We can also use the position of the variable using these double square brackets.
+```{r}
+mydata[['treatm']]
+mydata[[1]]
+```
+It is not possible to select more than one element using double brackets; The result will always be a vector (instead of a `data.frame`)
+
+
+## Selecting observations and variables in a `data.frame`
+
+Selecting observations and variables in a `data.frame` works more or less the same for `data.frames` as it does for lists. However because a `data.frame` is two dimensional we can two indices between the square brackets. The first one corresponds to the observations (rows) and the second corresponds to the variables (columns). So, as an example, we can select the first two observations from the third variable in the `data.frame` using the syntax:
+```{r}
+mydata[c(1, 2), 3]
+```
+
+When the first or second position is left blank all rows or columns are selected. For example:
+```{r}
+mydata[, 3]       # sex (3rd variable) for all patients
+mydata[c(1,2), ]  # all variables for the first two patients
+mydata[c(-3,-4), 'sex'] # Negative numbers and names can also be used
+```
+We have to be careful when we want to select a single variable from a  `data.frame`, as we do above. The result will now no longer be a  `data.frame` but it is transformed to a `vector`. When we want to prevent this we can use `drop=FALSE`, as follows:
+```{r}
+mydata[, 3, drop=FALSE]       # data.frame met een variabele
+```
+
+We can also use a single index between the square brackets. This works as if the `data.frame` was a list of variables (it's columns).
+
+```{r}
+mydata[1]
+mydata[[1]]
+```
 

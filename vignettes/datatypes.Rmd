@@ -37,20 +37,21 @@ We see that the first four variables are the patient number, the treatment, the 
 mean(mydata$age)
 ```
 
-## vectors en datatypes
+## vectors and datatypes
 
-Each variable in the `data.frame mydata` is a so called vector. A vector is a number of values that each have the same data type (Or mode^[`mode`, `storage.mode` and `type` are closely related concepts, we will not discuss the differences here. See also `?mode`.]). The most important data types in R are:^[There are a few more which we will not discuss.]: 
+Each variable in the `data.frame mydata` is a so called vector. A vector is a number of values that each have the same data type (Or mode^[`mode`, `storage.mode` and `type` are closely related concepts, we will not discuss the differences here. See also `?mode`.]). The most important data types in R are:^[There are a few more like `complex` and `raw`
+ which we will not discuss.]: 
 
 ------------    ---------------------------------------------------
         mode    description
 ------------    ---------------------------------------------------    
   character:    text, for example 'man', 'woman', 'censored', etc. 
     logical:    TRUE and FALSE
-    numeric:    a numerical value like 1, 1.2 or 1e12 (that is 10 raised to the power of 12)
-       list:    See below
--------------------------------------------------------------------
+    integer:    whole numers like 0, 1, 2, etc ...
+    numeric:    Posibly fractional numerical values like 1.0, 1.2 or 1e12 (that is 10 raised to the power of 12)
+ -------------------------------------------------------------------
 
-Vectors of these data types are the most elementary data structure in R. Or all structures (like the `data.table`) are constructed using these vectors. In R there is also no structure that is smaller than a vector. A single number is not treated differently from a numeric vector of length ten; In fact R sees the single number simply as a numeric vector of length 1. The `length()` of a vector can be obtained by using the function `length()`.
+Vectors of these data types are the most elementary data structure in R. All other structures (like the `data.table`) are constructed using these vectors. In R there is also no structure that is smaller than a vector. A single number is not treated differently from a numeric vector of length ten; In fact R sees the single number simply as a numeric vector of length 1. The `length()` of a vector can be obtained by using the function `length()`.
 
 A vector can be created using the function `c()`. (The `c` stands for 'concatenate', 'coerce' or 'combine')
 
@@ -76,22 +77,27 @@ c("eleven", 12)
 
 The second element of the resulting vector is now also of type `character`. In general it is better not to trust this implicit conversion. Instead to it explicitly, in this case by using the function `as.character()`.
 
+An other way to create a vector is by using the function `vector`. `vector('numeric', 8)` creates a numeric vector of length 8. The `vector` function is often used to preallocate room where the results of future computations can be stored. 
+
 ## lists
 
 Elements of a vector are always of the same type. A `list` differs from a vector by also allowing its elements to be of a different type. We can make a `list` using the function `list`.
 
 ```{r}
-lijst1 <- list("eleven", 12)
-lijst2 <- list(c(1, 2, 3), c('foo', 'bar'))
+list1 <- list("eleven", 12)
+list2 <- list(c(1, 2, 3), c('foo', 'bar'))
 ```
 We can also assign a name to the elements of a list:
 
 ```{r}
-lijst3 <- list(getallen=c(1, 2, 3), chars=c('foo', 'bar'))
+list3 <- list(numbers=c(1, 2, 3), chars=c('foo', 'bar'))
 ```
-
-
 It is also possible for a list to contain other lists.
+
+```{r}
+list4 <- list(numbers=c(1, 2, 3), chars=c('aap', 'noot'), 
+               sublist=list(1,'a'))
+```
 
 In many ways lists resemble data.frames. An important difference is that the length of all elements of a data.frame (that is the variables) must be the same. For a list this is not the case.
 
@@ -100,7 +106,7 @@ In many ways lists resemble data.frames. An important difference is that the len
 A `factor`is a special kind of vector for categorical data. The factor contains different integers one for every category. Each unique value has an associated 'label' that tell us what the code means. Factors are frequently used when we model categorical data. An advantage of a factor over a `character` is that we can limit the number of possible outcomes. It is also less likely to make mistakes due to typing errors.  Factors can be created by means of the function `factor()`.
 
 ```{r}
-factor(c('man', 'vrouw', 'man'))
+factor(c('male', 'female', 'male'))
 ```
 
 When a `factor` is displayed R also shows us the unique values the variable can take. These are called the 'levels' of the factor. 

@@ -19,9 +19,14 @@ data(pain)
 mydata <- pain
 ```
 
+
+# Functions
+
+For a large part the power of R leas in the ease by which functions can be made. This had lead to lot's of code becoming available (most often in the form of R packages) to solve all kinds of problems. 
+
 ## What are functions
 
-We have seen many examples of functions earlier in the course. For example `read.spss` to read spss data or `mode` to learn about an objects storage mode.  One could say that the functionality of `R` stems from the many functions that are available. So what exactly is a function? Actually a function is just a piece of code - that is a part of a program - that has peen given a name so it can be reused whenever necessary. 
+We have seen many examples of functions earlier in the course. For example `read.spss` to read spss data or `mode` to learn about an objects storage mode.   So what exactly is a function? Actually a function is just a piece of code - that is a part of a program - that has peen given a name so it can be reused whenever necessary. 
 
 In R a function definition looks as follows. 
 ```
@@ -66,6 +71,8 @@ We can make the value that is returned explicit by using the return _keyword_. I
  }
 ```
 
+One thing you should be aware of is that while normally the result of a expression is printed when it is not assigned to a variable, this is no longer true within a function. When you do want to show the output of an expression you will have to use the `print` function explicitly.
+
 
 ## Functions with multiple arguments
 It is also possible to create functions with multiple arguments:
@@ -78,12 +85,36 @@ sum_stats <- function(x, outliers){
 }
 sum_stats(mydata$age, 2)
 ```
-Whenever there are multiple parameters it might be difficult remember which parameter does what. This is why we can also use the names of the parameter in the function call. When we do this we also are more flexible in the order in which we specify the arguments. When the name is not specified the position is still determinative.
+Whenever there are multiple parameters it might be difficult remember which parameter does what. This is why we can also use the names of the parameter in the function call. When we do this we also are more flexible in the order in which we specify the arguments. When the name is not specified the position is still decisive.
 ```{r}
 sum_stats(mydata$age, outliers=2)
 sum_stats(outliers=2, mydata$age)
 ```
 
+## Replacement functions
+
+There are several functions with a name ending in `<-`. For example `is.na<-`. This are so called replacement functions. The arrow at the end of the name indicates that they can be used at the left hand side of an assignment.  For example `is.na<-` can be used in the following way to set specific elements of a vector to missing.
+
+```{r}
+a-vector <- 1:5
+is.na(a_vector) <- 2
+print(a_vector)
+```
+
+## Ellipses (...)
+
+Sometimes the parameter list of a function contains three dots (also called an ellips). This indicates that an unspecified number of extra unnamed arguments can be given to the function. Some frequently used functions with an ellips in the parameter list are: `c`, `data.frame`,  `min`, `max` and `cat` but there are many others.
+
+Often the ellipse is used to pass on parameters to other functions. Like in the fillowing function were the function `plot_regline` passes on arguments to the plot function.
+
+```{r}
+plot_regline<- function(x, y, ...){
+  lm1 <- lm(y~x)
+  plot(x, y, ...)
+  abline(lm1)
+}
+plot_regline(c(2,3,4), c(3,4,2), col='red')
+```
 ## Lexical scoping
 
 When a function tries to use a variable that is not one of the parameters and is not determined elsewhere in the function. It looks for the variable the the environment in which the function was defined. This can be the global environment (basically everything outside function definitions) or an other function if the functions are nested. We try to illustrate this with some examples

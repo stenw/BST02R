@@ -31,7 +31,7 @@ One of the most simple things we can do with R is to use it as a kind of calcula
 
 Here we use '>' to denote the R prompt. It is used in the console to indicate that R is ready for a new command. The lines in between is the output given by R.
 
-A lot of the functionality in R comes from its functions. There are many functions we can use including the standard mathematical ones:
+Most of the functionality in R comes from its functions. There are many functions we can use including the standard mathematical ones:
    >cos(3.1415)
    [1] -1
    >exp(0)
@@ -39,12 +39,15 @@ A lot of the functionality in R comes from its functions. There are many functio
    >log(1)
    [1] 0
 
+We will discuss functions later on in this text in much more detail.
+
 ## Variables
 
-The results above are displayed but not stored. To do this we must give a name to the result. That is we store the result in a variable. The results are now no longer displayed but they are given a name that we can use later to refer to the value we stored in it.
+The results above are displayed but not stored. To do this we must give a name to the result. That is, we store the result in a variable. The results are now no longer displayed but using the variable name we can refer to it later.
+
 Assigning a result in a variable is done using `<-`. For example:
 
-    >five <- 3+3
+    >five <- 3+2
     > five
     [1] 5
     > five + 1
@@ -61,11 +64,21 @@ As mentioned above R is a modular language that we can extend using packages. We
 Before we can load a library it must be installed. This can be done using the command `install.packages(packagename)` where `packagename` is the name of the package between single or double quotes. For example:
 
     >install.packages('gamlss')
+
+Some useful packages are `lme4` for analyses with repeated measurements and `mice` for multiple imputation. 
     
 ## Documentation
 
-The functions `help` en `?` can be used to read the documentation on a particular subject (mostly functions). The package in which the function is defined must be loaded. Using `help.search` and `??` we can search the documentation files in a more general way. 
+The functions `help` and `?` can be used to read the documentation on a particular subject (mostly functions). The package in which the function is defined must be loaded unless you use the `package` parameter ofn the help function. For example: `help('survreg' , package='survival')`.
+
+ Using `help.search` and `??` we can search the documentation files in a more general way. The documentation for all installed packages is searched for topics that have specific words in the title.
 
     >?library
     >help(install.packages)
     >help.search('logistic regression')
+
+Some R packages are also documented with so called vignettes. You can browse the vignettes of a package using the function `browseVignettes`, for example `browseVignettes(package="survival")`.     
+
+Using the function `RSiteSearch` you can search the documentation of all packages that are on CRAN (so it is like a google for R).
+
+Another great source of help is the site 'Stack Overflow'. A site were people can ask all kinds of programming related questions. 

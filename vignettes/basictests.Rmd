@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 ```
 
 
-# Basic parametric Statistical tests for continous data
+# Basic parametric Statistical tests for continuous data
 
 ## Single sample
 
@@ -34,6 +34,7 @@ From the output we see that the average in the sample was 89.5 points a differen
 
 ### Unpaired data
 Arguably the most common situation in which we perform a statistical test is when we have two independent groups for which we want to compare an outcome that is (approximately) normally distributed. In this situation we can use the two sample t-test for unrelated samples. Imagine we have conducted a trial in which we measure the pain score at follow-up between two treatment arms. The data from this trial is included in the data set `pain`. We can perform the two sample t-test for unpaired data using the same `t.test` command we used earlier.
+
 ```{r}
 data(pain, package='BST02R')
 t.test(painfu ~ treatm ,data=pain)
@@ -45,7 +46,8 @@ Actually here we performed the variant of the t-test that does not make the assu
 
 
 ### Paired data
-It is also interesting to see if the pain at follow-up is different from that at baseline. However here we cannot do this using the two sample t-test described above as the patents whose pain is measured at the follow-up are the same as those which are measured at baseline. For this we need the two sample t-test for *paired* data (which is actually the same as the one sample t-test performed at the difference between the pain levels at follow-up and baseline). Let's look at this in the Placebo group.
+It is also interesting to see if the pain at follow-up is different from that at baseline. However, here we cannot do this using the two sample t-test described above as the patents whose pain is measured at the follow-up are the same as those which are measured at baseline. For this we need the two sample t-test for *paired* data (which is actually the same as the one sample t-test performed at the difference between the pain levels at follow-up and baseline). Let's look at this in the Placebo group.
+
 ```{r}
 data_placebo <- pain[pain$treatm=='Placebo',]
 with(data_placebo, t.test(x=painbl, y=painfu))
@@ -82,7 +84,7 @@ From the output we see that the fraction of men is actually 70% with a confidenc
 prop.test(table(pain$sex))
 ```
 
-## Two (or more) independant samples
+## Two (or more) independent samples
 We can also use the function `prop.test` to compare a proportion between two groups. This test is called the chi square test. Let's compare whether the proportion of men is the same in the two arms of the trial.
 ```{r chisq}
 (tab <- table(pain$treatm, pain$sex))
@@ -96,12 +98,11 @@ The same test can be used when we want to compare more than two groups.
 (tab <- table(pain$race, pain$sex))
 prop.test(tab)
 ```
-In this case we get a warning. This is because some of the (expected) counts in the cross table are very low. This makes the approximation of the distribution of the test statistic under the null rather inaccurate.
+In this case we get a warning. This is because some of the (expected) counts in the cross table are very low. This makes the approximation of the distribution of the test statistic under the null that is used rather inaccurate.
 
+## Two dependent samples
 
-## Two dependant samples
-
-When  we want to test paired proportions we can use the McNemar test.  Let's use this test to check if the proportion of people that have a pain score larger than 50 differers between baseline and follow-up.
+When  we want to test paired proportions we can use the McNemar test.  Let's use this test to check if the proportion of people that have a pain score larger than 50 differs between baseline and follow-up.
 ```{r mcnemar}
 pain$painbl50 <- pain$painbl > 50
 pain$painfu50 <- pain$painfu > 50
@@ -109,6 +110,6 @@ pain$painfu50 <- pain$painfu > 50
 (tab <- table(pain$painbl50, pain$painfu50))
 mcnemar.test(tab)
 ```
-The McNemar test uses only the discordant pairs. The question is whether there are more people that have a high pain score at baseline and not at follow up than the other way around. Here this seems to be the case and we can reject the null that this proportion is the same.
+The McNemar test uses only the discordant pairs (i.e. the combinations were the outcome at baseline is the same as at follow-up are not used). The question is whether there are more people that have a high pain score at baseline and not at follow up than the other way around. Here this seems to be the case and we can reject the null that this proportion is the same.
 
 ![Flowchart](Flowchart.jpg)
