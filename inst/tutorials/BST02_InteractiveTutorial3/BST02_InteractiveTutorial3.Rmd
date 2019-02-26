@@ -19,182 +19,9 @@ pregdata <- read.spss('www/pregdata.sav',to.data.frame = TRUE)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-
-
-## Statistical Tests and Models
-
-*Commonly used statistical tests and models.*
-
-### Statistical tests {data-progressive=TRUE}
-
-
- Investigate the distributions of the variables serum bilirubin and serum cholesterol with histograms using the pbc2.id data set. Then perform the appropriate test(s) to investigate the differences between the groups placebo and D-penicil. Finally, extract the p-value of the tests:
-  
-```{r stattest1, exercise=TRUE, exercise.lines = 6}
-
-```
-
-```{r stattest1-solution}
-hist(pbc2.id$serBilir)
-hist(pbc2.id$serChol)
-test_serBilir <- wilcox.test(pbc2.id$serBilir ~ pbc2.id$drug)
-test_serChol <- t.test(pbc2.id$serChol ~ pbc2.id$drug)
-test_serBilir$p.value
-test_serChol$p.value
-```
-
- Using the same data set, investigate the association between sex and drug. Extract the statistic:
-  
-```{r stattest2, exercise=TRUE, exercise.lines = 3}
-
-```
-
-```{r stattest2-solution}
-tbl <- table(pbc2.id$sex, pbc2.id$drug)
-sexDrug_test <- chisq.test(tbl)
-sexDrug_test$statistic
-```
-
-### Regression models {data-progressive=TRUE}
-
- Using the same data set, perform a univariable and multivariable regression analysis using as outcome the variable serum bilirubin and predictions the variables sex, drug, age, ascites, hepatomegaly, spiders, edema. Print the summary of the models:
-
-```{r regr1, exercise=TRUE, exercise.lines = 8}
-
-```
-
-```{r regr1-solution}
-fm1a <- lm(serBilir ~ sex, data = pbc2.id)
-fm1b <- lm(serBilir ~ drug, data = pbc2.id)
-fm1c <- lm(serBilir ~ age, data = pbc2.id)
-fm1d <- lm(serBilir ~ ascites, data = pbc2.id)
-fm1e <- lm(serBilir ~ hepatomegaly, data = pbc2.id)
-fm1f <- lm(serBilir ~ spiders, data = pbc2.id)
-fm2 <- lm(serBilir ~ sex + drug + age + ascites + hepatomegaly + spiders, data = pbc2.id)
-lapply(list(fm1a, fm1b, fm1c, fm1d, fm1e, fm1f, fm2), function(x) summary(x))
-```
-
- Use a scatterplot to investigate the association between serBilir and age (pbc2.id data set). Assuming the multivariable model from the previous question, investigate whether a linear or a nonlinear age is needed. For the nonlinear assume a quadratic and a cubic term:
-
-```{r regr2, exercise=TRUE, exercise.lines = 4}
-
-```
-
-```{r regr2-solution}
-plot(pbc2.id$serBilir, pbc2.id$age)
-fm2 <- lm(serBilir ~ age + drug + sex + ascites + hepatomegaly + spiders, data = pbc2.id)
-fm2_nonlinear <- lm(serBilir ~ age + I(age^2) + I(age^3) + drug + sex + ascites + hepatomegaly + spiders, data = pbc2.id)
-anova(fm2, fm2_nonlinear)
-```
-
-<div style="color: blue; font-size: small">
-**Hint:** To compare models use the function `anova(...)`.
-</div>
-
-
- Assuming the pbc2.id data set, create a new categorical variable (serCholCat) for serum cholesterol as low = [minimum serum cholesterol until median serum cholesterol) and high = [median serum cholesterol until maximum serum cholesterol]. Fit a logistic regression assuming serCholCat as the outcome and age, sex and their interaction as the covariates. Extract the coeficients and p-values:
-
-```{r regr3, exercise=TRUE, exercise.lines = 5}
-
-```
-
-```{r regr3-solution}
-pbc2.id$serCholCat <- as.numeric(pbc2.id$serChol >= median(pbc2.id$serChol, na.rm = T))
-pbc2.id$serCholCat <- factor(pbc2.id$serCholCat, levels = c(0, 1), labels = c("low", "high"))
-gm1 <- glm(serBilir ~ age * sex, data = pbc2.id)
-res <- summary(gm1)
-res$coefficients[, c(1, 4)]
-```
-
-<div style="color: blue; font-size: small">
-**Hint:** To investigate the options you can extract, save the summary on a new object and use `$`.
-</div>
-
-
- Perform a multivariable regression analysis using as outcome the variable serum bilirubin and predictions the variables sex, drug, age (pbc2.id data set). Obtain the sum of squared errors:
-
-```{r regr4, exercise=TRUE, exercise.lines = 2}
-
-```
-
-```{r regr4-solution}
-fm3 <- lm(serBilir ~ age + sex + drug, data = pbc2.id)
-sum(resid(fm3)^2)
-```
-
-
-<div style="color: blue; font-size: small">
-**Hint:** Sum of squared errors is $\sum_{i=1}^n \epsilon_i^2$.
-</div>
-
-Use linear regression to examine the relation between the BMI of mothers and birthweight assuming the pregdata:
-
-```{r lm, exercise = TRUE, exercise.lines=1}
-
-
-```
-
-
-```{r lm-solution, solution = TRUE}
-lm(BW ~ BMI_Mo, data = pregdata)
-```
-
-R only gives you the parameter estimates of the intercept and the slope by default. Often we also want to see the p-values and confidence intervals. For this we first store the result of the regression analysis performed previously in a variable. Now we can use the functions `confint` and `summary` on thus newly created variable. 
-
-```{r lm2, exercise = TRUE,  exercise.lines=3 }
-
-```
-
-```{r lm2-hint-1}
-lm1 <- lm(BW ~ BMI_Mo, data = pregdata)
-confint()
-summary()
-```
-
-```{r lm2-hint-2, solution = TRUE, exercise.lines=20}
-lm1 <- lm(BW ~ BMI_Mo, data = pregdata)
-confint(lm1)
-summary(lm1)
-```
-
-
-
-## QUIZ - Statistical Tests and Models
-
-*Some questions have more than one correct answers.*
-
-```{r Q5 quiz}
-quiz(
-  question("Which of the following excludes the intercept?",
-    answer("lm(y ~ x1 + x2, data = data)"),
-    answer("lm(y ~ x1 * x2 - 1, data = data)", correct = TRUE),
-    answer("lm(y ~ -1 + x1 * x2, data = data)", correct = TRUE),
-    answer("lm(y ~ -1 + x1 + x2, data = data)", correct = TRUE)
-  ),
-  question("Which of the following codes will investigate the association of the explanatory variable age (as a continuous variable) with sex (as response variable) accounting for drug from the pbc2.id data set?",
-    answer("glm(sex ~ age + drug, data = pbc2.id)", correct = TRUE),
-    answer("glm(sex ~ age, data = pbc2.id)"),
-    answer("lm(age ~ sex + drug, data = pbc2.id)"),
-    answer("glm(sex ~ age + drug + sex, data = pbc2.id)")
-  ),
-  question("We want to fit a linear model in which we model y with the main effects and the interaction of treatment arm and time. All variables are included in the data.frame df. Which of the following codes does this correctly?",
-    answer("lm(y ~ time - arm,  data = df)"),
-    answer("lm(y ~ time * arm, data = df)", correct = TRUE),
-    answer("lm(y ~ time + arm, data = df)"),
-    answer("lm(y ~ time + arm + time : arm, data = df)", correct = TRUE)
-  ),
-  question("Examine the following code in R: 'fm1 <- lm(height ~ age:sex, data = dat)'. What does this code do?",
-    answer("Performs a linear regression including the main effects of age and sex"),
-    answer("Performs a linear regression including the interaction term of age and sex", correct = TRUE),
-    answer("Performs a linear regression including the main effects of age and sex and their interaction term"),
-    answer("Performs a logistic regression including the interaction term of age and sex")
-  )
-)
-```
-
 ## Quiz
 
-### Functies
+### Functions
 
 The questions below test your knowledge on the creation of functions.
 
@@ -287,7 +114,7 @@ is.numeric(pregdata$Sex)
 
 ### Writing our own function
 
-To start  with our own `summary` variant we Om te beginnen aan onze eigen variant op summary, we define a function with one parameter (let's call it `x`) that checks  if it is a `data.frame` a `factor` or a numeric variable. Use the `if` statement for this. When you want to display results from within the function you have to use the `print` function explicitly.
+To start  with our own `summary` variant, we define a function with one parameter (let's call it `x`) that checks  if it is a `data.frame` a `factor` or a numeric variable. Use the `if` statement for this. When you want to display results from within the function you have to use the `print` function explicitly.
 
 
 ```{r ifelse, exercise = TRUE, exercise.lines=20}
@@ -466,15 +293,15 @@ mysummary(pregdata)
 
 
 
-## Visualisation and inferential statistics 
+## Visualisation 
 
-Here we will learn more about making graphics and performing regression analysis
+Here we will learn more about making graphics.
 
 ## Histograms and boxplots
 
 One way to look at the distribution of a variable is by making a histigram. You can do this using the function `hist`. 
 
-Make a histogram of the BMI of the mothers (`BMI_Mo`)
+Make a histogram of the BMI of the mothers in `pregdata` (`BMI_Mo`)
 
 ```{r sumpregdatabp, exercise = TRUE}
 
@@ -490,28 +317,30 @@ hist(...)
 hist(pregdata$BMI_Mo)
 ```
 
-We can make the graph more beautifull by adding a title and replacing the x-axis by something more usefull. For this you can use the parameters `main` and `xlab`. Try it out below. 
+We can make the graph more beautifull by adding a title and replacing the x-axis by something more usefull. For this you can use the parameters `main` and `xlab`. In addition make the color of the bars of the histogram blue by using `col='blue'`  Try it out below. 
 
 
 ```{r plaatjetitel, exercise = TRUE}
 
 ```
 
-```{r plaatjetitel-hint-1, solution = TRUE}
+```{r plaatjetitel-hint-1}
 hist(pregdata$BMI_Mo,
      main=,
-     xlab= )
+     xlab= ,
+     col=)
 ```
 
 
-```{r plaatjetitel-hint-2, solution = TRUE}
+```{r plaatjetitel-hint-2}
 hist(pregdata$BMI_Mo,
      main='Histogram of the mothers BMI',
-     xlab='BMI' )
+     xlab='BMI',
+     col='blue')
 ```
 
 
-When you have categorical data you can make a bar plot. In R this can be done by the function  `barplot`. It's easiests to make a frequency table first and use that as the argument to the `barplot`  function. Please try it out yourself. 
+When you have categorical data you can make a bar plot. In R this can be done by the function  `barplot`. It's easiests to make a frequency table first and use that as the argument to the `barplot`  function. Please try it out yourself using the variable that contains the sex of the children. 
 
 ```{r plaatjetitel2, exercise = TRUE}
 
@@ -540,14 +369,13 @@ plot(x=, y=)
 
 ```{r scatter-solution, solution = TRUE}
 
-plot(x = pregdata$BMI_Mo, y = pregdata$ppGeboortegewicht)
+plot(x = pregdata$BMI_Mo, y = pregdata$BW)
 ```
 
-An other way in which we can use the `plot` function is by using a `formula`. This is a frequently used notation common to many R-functions. First the dependant variable is specified, followed by a  `~` sign, finally the independant variable are specified. For example `BW ~ 
-BMI_Mo`. Er wordt een aparte parameter data gebruikt om aan te geven weklke data set gebruikt wordt. Probeer dit hieronder uit.
+An other way in which we can use the `plot` function is by using a `formula`. This is a frequently used notation common to many R-functions. First the dependant variable is specified, followed by a  `~` sign, finally the independant variable are specified. For example `BW ~ BMI_Mo`. Now a separate parameter is used to specify the `data.frame` that is used. Try it yourself.
 
 ```{r scatter2, exercise = TRUE}
-plot(,)
+plot(,,data=)
 ```
 
 ```{r scatter2-solution, solution = TRUE}
@@ -555,5 +383,232 @@ plot(,)
 plot(BW ~ BMI_Mo, data = pregdata)
 ```
 
-It is possible to specify your own labels for the x and y-axis using the parameters `xlab` en `ylab`. The title can be specified using `main`. The colors and symbols that are used to plot the observations can be changed using `col` (try 'orange' ) en `pch` (try and set this to 2).  
+It is possible to specify your own labels for the x and y-axis using the parameters `xlab` en `ylab`. The title can be specified using `main`. The colors and symbols that are used to plot the observations can be changed using `col` (try 'orange' ) and `pch` (try and set this to 2). 
+```{r scatter3, exercise = TRUE}
+
+```
+
+```{r scatter3-solution, solution = TRUE}
+
+plot(BW ~ BMI_Mo, data = pregdata,
+     xlab="BMI Mother",
+     ylab="Birth Weight",
+     col="orange",
+     pch=2,
+     main="Relation between birth weight and BMI Mother")
+```
+
+Now change the color of the symbols to lightblue for boys and pink for girls. Also use different plotting symbols.
+
+```{r scatter4, exercise = TRUE}
+
+```
+
+```{r scatter4-solution, solution = TRUE}
+the_pch <- ifelse(pregdata$Sex=='boy', 16, 15)
+the_col <- ifelse(pregdata$Sex=='boy', 'lightblue', 'pink')
+
+plot(BW ~ BMI_Mo, data = pregdata,
+     xlab="BMI Mother",
+     ylab="Birth Weight",
+     col=the_col,
+     pch=the_pch,
+     main="Relation between birth weight and BMI Mother")
+```
+
+```{r scatter5, exercise = TRUE}
+
+```
+
+If BMI is above 30 the women are classified as Obese. Draw a reference line in the plot at this value using line type `lty=2` and line width `lwd=2`. In addition make the labels of the plot a little bigger using `cex.lab=1.2`.
+
+```{r scatter5-solution, solution = TRUE}
+the_pch <- ifelse(pregdata$Sex=='boy', 16, 15)
+the_col <- ifelse(pregdata$Sex=='boy', 'lightblue', 'pink')
+
+plot(BW ~ BMI_Mo, data = pregdata,
+     xlab="BMI Mother",
+     ylab="Birth Weight",
+     col=the_col,
+     pch=the_pch,
+     main="Relation between birth weight and BMI Mother",
+     cex.lab=1.2)
+
+abline(v=30, lty=2, lwd=2)
+```
+
+
+
+## Statistical Tests and Models
+
+*Commonly used statistical tests and models.*
+
+### Statistical tests {data-progressive=TRUE}
+
+
+ Investigate the distributions of the variables serum bilirubin and serum cholesterol with histograms using the pbc2.id data set. Then perform the appropriate test(s) to investigate the differences between the groups placebo and D-penicil. Finally, extract the p-value of the tests:
+  
+```{r stattest1, exercise=TRUE, exercise.lines = 6}
+
+```
+
+```{r stattest1-solution}
+hist(pbc2.id$serBilir)
+hist(pbc2.id$serChol)
+test_serBilir <- wilcox.test(pbc2.id$serBilir ~ pbc2.id$drug)
+test_serChol <- t.test(pbc2.id$serChol ~ pbc2.id$drug)
+test_serBilir$p.value
+test_serChol$p.value
+```
+
+ Using the same data set, investigate the association between sex and drug. Extract the statistic:
+  
+```{r stattest2, exercise=TRUE, exercise.lines = 3}
+
+```
+
+```{r stattest2-solution}
+tbl <- table(pbc2.id$sex, pbc2.id$drug)
+sexDrug_test <- chisq.test(tbl)
+sexDrug_test$statistic
+```
+
+### Regression models {data-progressive=TRUE}
+
+ Using the same data set, perform a univariable and multivariable regression analysis using as outcome the variable serum bilirubin and predictions the variables sex, drug, age, ascites, hepatomegaly, spiders, edema. Print the summary of the models:
+
+```{r regr1, exercise=TRUE, exercise.lines = 8}
+
+```
+
+```{r regr1-solution}
+fm1a <- lm(serBilir ~ sex, data = pbc2.id)
+fm1b <- lm(serBilir ~ drug, data = pbc2.id)
+fm1c <- lm(serBilir ~ age, data = pbc2.id)
+fm1d <- lm(serBilir ~ ascites, data = pbc2.id)
+fm1e <- lm(serBilir ~ hepatomegaly, data = pbc2.id)
+fm1f <- lm(serBilir ~ spiders, data = pbc2.id)
+fm2 <- lm(serBilir ~ sex + drug + age + ascites + hepatomegaly + spiders, data = pbc2.id)
+lapply(list(fm1a, fm1b, fm1c, fm1d, fm1e, fm1f, fm2), function(x) summary(x))
+```
+
+ Use a scatterplot to investigate the association between serBilir and age (pbc2.id data set). Assuming the multivariable model from the previous question, investigate whether a linear or a nonlinear age is needed. For the nonlinear assume a quadratic and a cubic term:
+
+```{r regr2, exercise=TRUE, exercise.lines = 4}
+
+```
+
+```{r regr2-solution}
+plot(pbc2.id$serBilir, pbc2.id$age)
+fm2 <- lm(serBilir ~ age + drug + sex + ascites + hepatomegaly + spiders, data = pbc2.id)
+fm2_nonlinear <- lm(serBilir ~ age + I(age^2) + I(age^3) + drug + sex + ascites + hepatomegaly + spiders, data = pbc2.id)
+anova(fm2, fm2_nonlinear)
+```
+
+<div style="color: blue; font-size: small">
+**Hint:** To compare models use the function `anova(...)`.
+</div>
+
+
+ Assuming the pbc2.id data set, create a new categorical variable (serCholCat) for serum cholesterol as low = [minimum serum cholesterol until median serum cholesterol) and high = [median serum cholesterol until maximum serum cholesterol]. Fit a logistic regression assuming serCholCat as the outcome and age, sex and their interaction as the covariates. Extract the coeficients and p-values:
+
+```{r regr3, exercise=TRUE, exercise.lines = 5}
+
+```
+
+```{r regr3-solution}
+pbc2.id$serCholCat <- as.numeric(pbc2.id$serChol >= median(pbc2.id$serChol, na.rm = T))
+pbc2.id$serCholCat <- factor(pbc2.id$serCholCat, levels = c(0, 1), labels = c("low", "high"))
+gm1 <- glm(serBilir ~ age * sex, data = pbc2.id)
+res <- summary(gm1)
+res$coefficients[, c(1, 4)]
+```
+
+<div style="color: blue; font-size: small">
+**Hint:** To investigate the options you can extract, save the summary on a new object and use `$`.
+</div>
+
+
+ Perform a multivariable regression analysis using as outcome the variable serum bilirubin and predictions the variables sex, drug, age (pbc2.id data set). Obtain the sum of squared errors:
+
+```{r regr4, exercise=TRUE, exercise.lines = 2}
+
+```
+
+```{r regr4-solution}
+fm3 <- lm(serBilir ~ age + sex + drug, data = pbc2.id)
+sum(resid(fm3)^2)
+```
+
+
+<div style="color: blue; font-size: small">
+**Hint:** Sum of squared errors is $\sum_{i=1}^n \epsilon_i^2$.
+</div>
+
+Use linear regression to examine the relation between the BMI of mothers and birthweight assuming the pregdata:
+
+```{r lm, exercise = TRUE, exercise.lines=1}
+
+
+```
+
+
+```{r lm-solution, solution = TRUE}
+lm(BW ~ BMI_Mo, data = pregdata)
+```
+
+R only gives you the parameter estimates of the intercept and the slope by default. Often we also want to see the p-values and confidence intervals. For this we first store the result of the regression analysis performed previously in a variable. Now we can use the functions `confint` and `summary` on thus newly created variable. 
+
+```{r lm2, exercise = TRUE,  exercise.lines=3 }
+
+```
+
+```{r lm2-hint-1}
+lm1 <- lm(BW ~ BMI_Mo, data = pregdata)
+confint()
+summary()
+```
+
+```{r lm2-hint-2, solution = TRUE, exercise.lines=20}
+lm1 <- lm(BW ~ BMI_Mo, data = pregdata)
+confint(lm1)
+summary(lm1)
+```
+
+
+
+## QUIZ - Statistical Tests and Models
+
+*Some questions have more than one correct answers.*
+
+```{r Q5 quiz}
+quiz(
+  question("Which of the following excludes the intercept?",
+    answer("lm(y ~ x1 + x2, data = data)"),
+    answer("lm(y ~ x1 * x2 - 1, data = data)", correct = TRUE),
+    answer("lm(y ~ -1 + x1 * x2, data = data)", correct = TRUE),
+    answer("lm(y ~ -1 + x1 + x2, data = data)", correct = TRUE)
+  ),
+  question("Which of the following codes will investigate the association of the explanatory variable age (as a continuous variable) with sex (as response variable) accounting for drug from the pbc2.id data set?",
+    answer("glm(sex ~ age + drug, data = pbc2.id)", correct = TRUE),
+    answer("glm(sex ~ age, data = pbc2.id)"),
+    answer("lm(age ~ sex + drug, data = pbc2.id)"),
+    answer("glm(sex ~ age + drug + sex, data = pbc2.id)")
+  ),
+  question("We want to fit a linear model in which we model y with the main effects and the interaction of treatment arm and time. All variables are included in the data.frame df. Which of the following codes does this correctly?",
+    answer("lm(y ~ time - arm,  data = df)"),
+    answer("lm(y ~ time * arm, data = df)", correct = TRUE),
+    answer("lm(y ~ time + arm, data = df)"),
+    answer("lm(y ~ time + arm + time : arm, data = df)", correct = TRUE)
+  ),
+  question("Examine the following code in R: 'fm1 <- lm(height ~ age:sex, data = dat)'. What does this code do?",
+    answer("Performs a linear regression including the main effects of age and sex"),
+    answer("Performs a linear regression including the interaction term of age and sex", correct = TRUE),
+    answer("Performs a linear regression including the main effects of age and sex and their interaction term"),
+    answer("Performs a logistic regression including the interaction term of age and sex")
+  )
+)
+```
+
+ 
 
