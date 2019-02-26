@@ -12,8 +12,8 @@ tutorial:
 
 ```{r setup, include=FALSE}
 library(learnr)
-library(JM)
-library(memisc)
+require(JM)
+require(memisc)
 library(foreign)
 pregdata <- read.spss('www/pregdata.sav',to.data.frame = TRUE)
 knitr::opts_chunk$set(echo = FALSE)

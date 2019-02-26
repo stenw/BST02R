@@ -56,7 +56,7 @@ pregdata[1:4,]
 head(pregdata)
 ```
 
-If we just want to know the variable names of the variables in the `data.frame` we can also use the function `names()`. If we also want to know about the variables typeswe can use the function `str()`. PLease try this out yourself.
+If we just want to know the variable names of the variables in the `data.frame` we can also use the function `names()`. If we also want to know about the variables types  we can use the function `str()`. PLease try this out yourself. What is the class of the variable `MoWestern` and what us the mode? (First try to answer this question with the results you already have otherwise use the `mode` and `class` function)
 
 
 ```{r namespregdata, exercise = TRUE}
@@ -86,7 +86,7 @@ We will now examine the BMI of the mothers (the variable is called `BMI_Mo`). Le
 ```
 
 
-```{r bmipregdata-solution, solution = TRUE}
+```{r bmipregdata-solution}
 bmi <- pregdata$BMI_Mo
 length(bmi)
 ```
@@ -114,7 +114,7 @@ mean(bmi) # compute the mean
 sd(bmi) # compute the standard deviation
 ```
 
-Note that you can read the documentation on any function Using the function `help`. For example `help('sd')` gives you the documentation on the `sd` function.
+Remember that you can read the documentation on any function Using the function `help`. For example `help('sd')` gives you the documentation on the `sd` function.
 
 Actually it is not really needed to make a new variable  we also could have directly used `mean(pregdata$BMI_Mo)` and `sd(pregdata$BMI_Mo)`. Do this yourself below. Also do this for the age of the mother (`AgeMother`).
 
@@ -147,7 +147,7 @@ sd(pregdata$AgeMother)
 ### A selection
 
 We will now focus on mothers that give birth to a boy. Make the selection using: 
-`sel <- pregdata[pregdata$Sex=='2=boy',].`
+`sel <- pregdata[pregdata$Sex=='boy',].`
 
 
 
@@ -157,7 +157,7 @@ We will now focus on mothers that give birth to a boy. Make the selection using:
 
 
 ```{r selpregdata-solution, solution = TRUE}
-sel <- pregdata[pregdata$Sex=='2=boy',]
+sel <- pregdata[pregdata$Sex=='boy',]
 ```
 
 How many mothers are included in this selection. Wat is their average age?
@@ -165,7 +165,7 @@ How many mothers are included in this selection. Wat is their average age?
 
 ```{r prepare-selmeanpregdata}
 bmi <- pregdata$BMI_Mo
-sel <- pregdata[pregdata$Sex=='2=boy',]
+sel <- pregdata[pregdata$Sex=='boy',]
 ```
 
 
@@ -204,11 +204,13 @@ What are the  minimum, the maximum and the median BMI of the women that give bir
 
 
 ```{r minmaxmedianpregdata-hint-2}
-sel <- pregdata[pregdata$Sex=='1=girl',]
+sel <- pregdata[pregdata$Sex=='girl',]
 min(sel[,'BMI_Mo'])
 max(sel[,'BMI_Mo'])
 median(sel[,'BMI_Mo'])
 ```
+
+
 
 ## Sorting
 
@@ -216,13 +218,15 @@ median(sel[,'BMI_Mo'])
 
 To sort a vector in R you can use the function `sort`. Use `decreasing = TRUE` to sort in reverse order. Try sorting the BMIs in `pregdata`.
 
-```{r sorting1, exercise.setup="prepare-selmeanpregdata" }
+```{r sorting1, exercise.setup="prepare-selmeanpregdata", exercise=TRUE}
 
 ```
 
 
 ```{r sorting1-solution}
+
 sort(pregdata$BMI_Mo)
+
 ```
 
 ### Sorting a data.frame
@@ -277,20 +281,51 @@ rank(pregdata$AgeMother)[1]
 
 ```
 
+### Duplicates and unique values
+
+When you want to see if a value is duplicated in a vector you can use the function `duplicated`. Look up the documentation of this function and use it to select the first measuremnt of every subject in the `pbc2` data set.Print the data for the first 10 patients.
+
+```{r sorting6, exercise=TRUE}
+
+
+
+```
+
+```{r sorting6-solution}
+pbc2[!duplicated(pbc2$id), 1:10]
+
+
+```
+
+A related function is the function `unique()`. Use it to select the unique patient numbers
+
+```{r sorting7, exercise=TRUE}
+
+
+
+```
+
+```{r sorting7-solution}
+unique(pbc2$id)
+
+
+```
+
 ## Sequences
 
-If you have to enter a vector with many elements working with `c` becomes tiresome. However if the values follow a  (regular) sequence it is onteneasy to create them by using the function `seq`.
+If you have to enter a vector with many elements working with `c` becomes tiresome. However if the values follow a  (regular) sequence it is often eaasy to create them by using the function `seq`.
 
-```{r seq1, exercise=TRUE, exercise.eval=TRUE, exercise.lines = 5}
+```{r seq1, exercise=TRUE, exercise.lines = 5}
 seq(1, 10)
 seq(1, 10, by = 2)
 seq(1, 10, length.out = 5)
 2:5   # same as seq(2,5)
+
 ```
 
 Let's use a sequence to plot a function. create a sequence of length 100 from -5 to to 5 and call this x. Now calculate sin(x) and call this y. Finally plot x vs y.
 
-```{r seq2,  exercise=TRUE, exercise.eval=TRUE, exercise.lines = 5}
+```{r seq2,  exercise=TRUE, exercise.lines = 5}
 # Calculate x and y as described above
 # plot(x=x, y=y)
 ```
@@ -307,7 +342,7 @@ We will discuss plots in more detail later on in the course.
 
 When you want to repeat a vector multiple times the `rep` function can help. Try it out below.
 
-```{r seq3, exercise=TRUE, exercise.eval=TRUE, exercise.lines = 5}
+```{r seq3, exercise=TRUE, exercise.lines = 5}
 rep(c('Active', 'Control'), times=4)
 rep(c('Active', 'Control'), length.out=6)
 rep(c('Active', 'Control'), each=5)
@@ -320,7 +355,7 @@ rep(c('Active', 'Control'), c(1,3))
 In this course we mainly work with numerical data (or factors). Sometimes however, we also have to work with text data (type `character` in R, also sometimes called 'strings'). When you want to combine `character` variables you can use the `paste` or `paste0` functions.
 
 
-```{r text1, exercise=TRUE, exercise.eval=TRUE, exercise.lines = 5}
+```{r text1, exercise=TRUE, exercise.lines = 5}
 paste(c('foo', 'bar'), c('A', 'B'))
 paste(c('foo', 'bar'), c('A', 'B'), sep='-')
 paste(c('foo', 'bar'), c('A', 'B'), sep='-', collapse = '_')
@@ -331,9 +366,10 @@ When you want to extract some of the characters of a `character` variable you ca
 
 
 
-```{r text2, exercise=TRUE, exercise.eval=TRUE, exercise.lines = 5}
+```{r text2, exercise=TRUE, exercise.lines = 5}
 substr(c('foo-delete this', 'bar-this should be removed'), start=1, stop=3)
 strsplit(c('foo-delete this', 'bar-this should be removed'),split = '-')
+
 ```
 
 Now use the `substr` function together with `as.numeric` to convert the patient id variable of `pregdata` to numeric format.
@@ -345,6 +381,8 @@ Now use the `substr` function together with `as.numeric` to convert the patient 
 
 ```{r text3-solution}
 pregdata$newid <- as.numeric(substr(pregdata$id,3,5))
+pregdata$newid[1:10]
+mode(pregdata$newid)
 ```
 
 If you need to work a lot with `character` data, take a look at the `stringr` library.
@@ -363,7 +401,7 @@ mean(x)
 sd(x)
 ```
 
-In the same way we can generate data from other statistical distributions using e.g. `rt`, `rbinom`, `rpois`, `rchisq`, etc...
+In the same way we can generate data from other statistical distributions using e.g. `rt` (t-distribution, like standard normal but with thinker tails), `rbinom` (for binary outcomes), `rpois` (for counts), `rchisq` (often used for sums of squares in statistical tests), etc...
 
 ```{r statdist2, exercise=TRUE}
 rt(5, df=3)
@@ -409,46 +447,195 @@ dbinom(x =2 , prob =0.5 , size = 4)
 ```
 
 
-## Creating your own functions
+## Creating your own functions {data-progressive=TRUE}
 
-We want to create a function that takes a data frame as input and selects all rows for which a certain variable ('age' by default) inside the data set is above a cutoff value (65 by default).
+### Function making a selection {data-progressive=TRUE}
+
+We want to create a function that takes a data frame as input and selects all rows for which a certain variable ('AgeMother' by default) inside the data set is above a cutoff value (35 by default).
 
 Complete the function:
 ```{r P1, exercise=TRUE, exercise.lines = 16, eval=FALSE}
 myfn <-
-function(dataset, varname='age', cutoff=65){
-
+function(dataset, varname='AgeMother', cutoff=35){
+# complete the function
   return(rv)  
 }
-myfn(pain, 'age')
+myfn(pregdata, 'AgeMother')
 ```
 
 ```{r P1-hint-1}
 myfn <-
-function(dataset, varname='age', cutoff=65){
+function(dataset, varname='AgeMother', cutoff=35){
   rv <- dataset[..., ]  # figure out what should be on the ...
   return(rv)
 }
-myfn(pain, 'age')
+myfn(pregdata, 'AgeMother')
 ```
 ```{r P1-hint-2}
 myfn <-
-function(dataset, varname='age', cutoff=65){
+function(dataset, varname='AgeMother', cutoff=35){
   rv <- dataset[dataset[,...]>..., ]  
   # figure out what should be on the ...
   return(rv)
 }
-myfn(pain, 'age')
+myfn(pregdata, 'AgeMother')
 ```
-
 
 ```{r P1-hint-3}
 # Use:
 myfn <- 
-function(dataset, varname='age', cutoff=65){
+function(dataset, varname='AgeMother', cutoff=35){
   rv <- dataset[dataset[,varname] > cutoff , ]
   return(rv)
 }
+myfn(pregdata, 'AgeMother')
+```
+
+### Extending the function {data-progressive=TRUE}
+
+Now extend the function so it no longer gives the selection as return value but make it generate a frequency table of Sex for the selection.
+
+```{r P1ext, exercise=TRUE, exercise.lines = 16, eval=FALSE}
+# Change the function below
+myfn <- 
+function(dataset, varname='AgeMother', cutoff=35){
+  rv <- dataset[dataset[,varname] > cutoff , ]
+  return(rv)
+}
+myfn(pregdata, 'AgeMother')
+```
+
+```{r P1ext-hint-1}
+myfn <-
+function(dataset, varname='AgeMother', cutoff=35){
+  rv <- dataset[dataset[,varname] > cutoff , ]
+  rv <- table(rv[ , ...] )
+  return(rv)
+}
+myfn(pregdata, 'AgeMother')
+```
+
+```{r P1ext-hint-2}
+myfn <-
+function(dataset, varname='AgeMother', cutoff=35){
+  rv <- dataset[dataset[,varname] > cutoff , ]
+  rv<-table(rv[ , 'Sex'] )
+  return(rv)
+}
+myfn(pregdata, 'AgeMother')
+```
+
+### Make the function more general {data-progressive=TRUE}
+
+As a final exersize change the function in such a way so we do not always display the frequencies for Sex. Instead we want to choose the variable of which to make frequencies
+
+```{r P1ext2, exercise=TRUE, exercise.lines = 16, eval=FALSE}
+# Change the function below
+myfn <-
+function(dataset, varname='age', cutoff=35){
+  rv <- dataset[dataset[,varname] > cutoff , ]
+  rv<-table(rv[ , 'Sex'] )
+  return(rv)
+}
+myfn(pregdata, 'AgeMother')
+myfn(pregdata, 'AgeMother', varname2='Death')
+```
+
+```{r P1ext2-solution}
+myfn <-
+function(dataset, varname='age', cutoff=35, varname2= 'Sex'){
+  rv <- dataset[dataset[,varname] > cutoff , ]
+  rv<-table(rv[ , varname2] )
+  return(rv)
+}
+myfn(pregdata, 'AgeMother')
+myfn(pregdata, 'AgeMother', varname2='Death')
+```
+
+## Results of a regression analysis
+
+Using the `pregdata` data set we have caried out linear regression analysis (discussed later in the course in more detail) were we have estimated the coefficients in the equation: $BW = \beta_0 +\beta_1 Sex + \beta_2 Age$. 
+A summary of the results is stored in the object `slm1`. 
+
+```{r reg-setup, include=FALSE}
+lm1<-lm(BW~ Sex + AgeMother, data=pregdata)
+slm1 <- summary(lm1)
+```
+
+What is the `class` of slm1?
+
+```{r reg, exercise=TRUE, exercise.lines = 3, eval=FALSE}
+```
+
+
+```{r reg-solution}
+class(slm1)
+```
+
+#### Extract the coefficients {data-progressive=TRUE}
+
+The coefficients (and their SE and p-values) are stored in the element named `coefficients`? What is its class? Can you extract the coefficient of the age and store it in a separate variable?
+
+```{r reg2, exercise=TRUE, exercise.lines = 6, eval=FALSE, exercise.setup = "reg-setup"}
+```
+
+```{r reg2-solution}
+class(slm1$coefficients)
+beta2 <- slm1$coefficients['AgeMother','Estimate']
+```
+
+
+## QUIZ - Functions
+
+
+```{r Q1 quiz}
+quiz(
+  question("How do we denine a function fn that takes two vectors as arguments and returns the sum:",
+    answer(" vector fn(x, y){x + y}"),
+    answer(" function fn(x, y){return(x + y)}"),
+    answer("fn<-function(x, y){x + y}", correct = TRUE),
+    answer(" fn(x, y)<-function{return(x + y)}")
+  ),
+  question("We have the following code:
+x<-3 \n
+fn <- function(y=3){ \n
+  return(x/y) \n
+  x<-9 \n
+} \n
+x<- 6 \n
+fn() \n
+
+What if anything is returned by the function call?
+",
+    answer("1"),
+    answer("2", correct = TRUE),
+    answer("3"),
+    answer("9")
+  ),
+  question("
+           
+
+A matrix M is defined as: \n
+
+M <- matrix(1:12, 3) \n
+
+What is returned by:
+
+length(M)
+",
+    answer("3"),
+    answer("4"),
+    answer("12", correct = TRUE),
+    answer("NULL"),
+    answer("we get an error")
+    ),
+  question("How can we remove all duplicated values from a vector x?",
+    answer(" x[unique(x)]"),
+    answer("!duplicated(x)"),
+    answer(" x[!duplicated(x)]", correct = TRUE),
+    answer(" complete.cases(x)")
+  )
+)
 ```
 
 

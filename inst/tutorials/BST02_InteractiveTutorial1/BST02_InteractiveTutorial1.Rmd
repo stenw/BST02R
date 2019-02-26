@@ -6,7 +6,7 @@ output:
     allow_skip: true
 tutorial:
   id: "io.shinyapps.erasmusmc.bst02tutorial1"
-  version: 0.92    
+  version: 0.93  
 runtime: shiny_prerendered
 ---
 
@@ -121,12 +121,11 @@ quiz(
 )
 ```
 
-
 ## Data Transformation and Exploration
 
 ### Transformation {data-progressive=TRUE}
 
-*Sometimes data transformation is needed.*
+# Sometimes data transformation is needed
 
  Categorize serum bilirubin as low_val: [0.3 until 3.2) and high_val: [3.2 until 28]. Give this variable the name "serBilCat". Print the first 6 rows of the data:
 
@@ -142,17 +141,15 @@ pbc2.id$serBilCat <- factor(pbc2.id$serBilCat, levels = c(0, 1), labels = c("low
 head(pbc2.id)
 ```
 
-<div style="color: blue; font-size: small">
 **Hint:** Use the function `factor(...)` to create a categorical variable. Use the function `as.numeric(...)` to convert a variable to a numeric variable. 
-</div>
 
 
- Categorize serum bilirubin as low_val: [minimum serum Bilirubin until mean serum Bilirubin) and high_val: [mean serum Bilirubin until maximum serum Bilirubin). Give this variable the name "serBilCat2". Print the first 6 rows of the data:
+Categorize serum bilirubin as low_val: all values from the lowest upto but not including including the mean and high_val: the mean and everything above that. Give this variable the name "serBilCat2". Print the first 6 rows of the data:
+
 
 ```{r serBilCat2, exercise=TRUE, exercise.eval=TRUE, exercise.lines = 4}
 
 ```
-
 
 
 ```{r serBilCat2-solution}
@@ -161,15 +158,16 @@ pbc2.id$serBilCat2 <- factor(pbc2.id$serBilCat2, levels = c(0, 1), labels = c("l
 head(pbc2.id)
 ```
 
-<div style="color: blue; font-size: small">
+
 **Hint:** Use the function `factor(...)` to create a categorical variable. Use the function `as.numeric(...)` to convert a variable to a numeric variable. 
-</div>
 
 
- Categorize serum bilirubin as follows: <br>
-- low_val: [minimum serum Bilirubin until 2)<br>
-- med_val: [2 until 4)<br>
-- high_val: [4 until maximum serum bilirubin)<br> 
+Categorize serum bilirubin as follows: 
+
+* low_val: [minimum serum Bilirubin until 2)
+* med_val: [2 until 4)
+* high_val: [4 until maximum serum bilirubin)
+
 Give this variable the name "serBilCat3". Print the first 6 rows of the data:
 
 ```{r serBilCat3, exercise=TRUE, exercise.eval=TRUE, exercise.lines = 4}
@@ -183,9 +181,9 @@ pbc2.id$serBilCat3 <- factor(pbc2.id$serBilCat3, levels = c("[0.3,2)", "[2,4)", 
 head(pbc2.id)
 ```
 
-<div style="color: blue; font-size: small">
-**Hint:** Use the function `factor(...)` to create a categorical variable. Use the function `cut(..., right = FALSE)` to convert a continuous variable to a categorical variable. If needed consult the documentation for the `cut` function using `?cut`.
-</div>
+
+**Hint:** Use the function `factor(...)` to create a categorical variable. Use the function `cut(..., right = FALSE)` to convert a continuous variable to a categorical variable. If needed consult the documentation for the `cut` function using ?cut.
+
 
 
  Check whether the variable "hepatomegaly" consists of missing values:
@@ -196,12 +194,11 @@ head(pbc2.id)
 
 ```{r hepaMiss-solution}
 sum(is.na(pbc2.id$hepatomegaly)) # or any(is.na(pbc2.id$hepatomegaly))
+
 ```
 
-<div style="color: blue; font-size: small">
-**Hint:** Use the function `is.na(...)` to investigate if a vector has missing values.
-</div>
 
+**Hint:** Use the function `is.na(...)` to investigate if a vector has missing values.
 
 ### Exploration {data-progressive=TRUE}
 
@@ -365,7 +362,7 @@ pbc2.id["id"] # OR pbc2.id[["id"]] OR pbc2.id[,"id"]
 pbc2.id[pbc2.id$drug == "D-penicil", ]
 ```
 
-### fFurther questrions about indexing {data-progressive=TRUE}
+### Further questrions about indexing {data-progressive=TRUE}
 
  Select the sex of the 10th patient:
 
@@ -500,6 +497,62 @@ myList[[2]][, 1:2]
 
 ```{r Q3 quiz}
 quiz(
+    question("
+We run the following code: \n
+v <- c(1, 5, 8) \n
+v[2]      \n 
+
+What is the value returned by the last statement?",
+    answer("1"),
+    answer("2"),
+    answer("5", correct=TRUE),
+    answer("8")
+  ),
+  question("We run the following code:
+  \n
+L <- list(1, 2, 'A', 'B', FALSE) \n
+L[1]      \n 
+
+What is the value returned by the last statement?",
+    answer("A numeric vector of length 1"),
+    answer("A numeric vector of length 2"),
+    answer("A list of length 1", correct=TRUE),
+    answer("A list of length 2")
+  ),
+    question("ages is a vector of the ages in years of some individuals. How can we select all ages that are less than or equal to 40?",
+    answer("ages[1:40]"),
+    answer("ages[40]"),
+    answer("ages[ages=<40]"),
+    answer("ages[ages<=40], correct=TRUE")
+  ),
+  question("
+We define a data.frame: \n
+
+mydata <- data.frame(ages=c(31, 32, 33), Sex=factor(c('M', 'V', 'M')) \n
+) \n
+
+How can we select the 2nd row of mydata?
+",
+    answer("mydata[2]"),
+    answer("mydata[[2]]"),
+    answer("mydata[2, ]", correct=TRUE),
+    answer("mydata[ ,2]")
+  ),
+  question("We run the following code in R: \n
+
+A <- matrix(1:9, nrow = 3) \n
+
+B <- A[2,,drop=FALSE] \n
+
+How can we select the 2nd row of mydata?
+
+Which of the following is correct
+",
+    answer("B is a vector of length 3"),
+    answer("B is a 1 by 3 matrix", correct=TRUE),
+    answer("B is a 3 by 1 matrix"),
+    answer(" B is a list of length 3")
+  ),
   question("How can we select the first row and first column of the pbc2.id data set?",
     answer("pbc2.id[c(1,2), ]"),
     answer("pbc2.id[1, 1]", correct = TRUE),
