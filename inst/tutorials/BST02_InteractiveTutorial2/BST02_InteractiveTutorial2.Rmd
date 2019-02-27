@@ -6,7 +6,7 @@ output:
     allow_skip: true
 tutorial:
   id: "io.shinyapps.erasmusmc.bst02tutorial2"
-  version: 0.923    
+  version: 0.924    
 runtime: shiny_prerendered
 ---
 

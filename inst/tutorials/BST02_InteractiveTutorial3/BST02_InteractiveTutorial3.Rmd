@@ -7,7 +7,7 @@ output:
 runtime: shiny_prerendered
 tutorial:
   id: "io.shinyapps.erasmusmc.bst02tutorial3"
-  version: 0.923
+  version: 0.93
 ---
 
 ```{r setup, include=FALSE}
@@ -69,7 +69,7 @@ quiz(
 
 We will now write our own functions that help in the analysis of the `pregdata` dataset. 
 
-### Onderzoek data
+### Writing a function to analyse data
 
 Again the data is available as the `data.frame` `pregdata`. Use the `summary` function to get a quick overview of the variables in the dataset. Also use the summary function to just look at the Age of the Mothers.
 
@@ -87,7 +87,7 @@ summary(pregdata)
 summary(pregdata$AgeMother)
 ```
 
-We will try and make a function that gives a simular overview of a data set. TheWe zullen in deze opgave proberen ook een functie te maken die een soortgelijke samenvatting van de data set geeft. Like the summary function of R we want to make the type of output dependant on the type of the input.  When we use a categorical variable we see a frequency table of the different categories and when we use a contineous variable we see the mean and some quantiles. When a whole `data.frame` is used we get information about all variables in the `data.frame`.  
+We will try and make a function that gives a simular overview of a data set. Like the summary function of R we want to make the type of output dependant on the type of the input.  When we use a categorical variable we see a frequency table of the different categories and when we use a contineous variable we see the mean and some quantiles. When a whole `data.frame` is used we get information about all variables in the `data.frame`.  
 
 ### Types of variable
 
@@ -121,7 +121,8 @@ To start  with our own `summary` variant, we define a function with one paramete
 mysummary <- function(x){
   
 }
-
+mysummary(c(1,2))
+mysummary(as.factor(c('a', 'b')))
 ```
 
 
@@ -135,6 +136,8 @@ mysummary <- function(x){
     print('This variabele is numeric')
   }
 }
+mysummary(c(1,2))
+mysummary(as.factor(c('a', 'b')))
 
 ```
 
@@ -150,6 +153,8 @@ mysummary <- function(x){
     print('This variabele is numeric')
   }
 }
+mysummary(c(1,2))
+mysummary(as.factor(c('a', 'b')))
 ```
 
 ### Descriptive statistics categorical and continuous variables
@@ -197,9 +202,9 @@ mysummary <- function(x){
   }else if(is.numeric(x)){
     print('This variabele is numeric')
     print('mean')
-    print(mean(x))
+    print(mean(x, na.rm = TRUE))
     print('sd')
-    print(sd(x))
+    print(sd(x[!is.na(x)]))
   }
 }
 mysummary(pregdata$CRL.1)
@@ -226,9 +231,9 @@ mysummary <- function(x){
   }else if(is.numeric(x)){
     print('deze variabele is numeriek')
     print('mean')
-    print(mean(x))
+    print(mean(x, na.rm = TRUE))
     print('sd')
-    print(sd(x))
+    print(sd(x[!is.na(x)]))
   }
   
 }
@@ -259,9 +264,9 @@ mysummary <- function(x){
   }else if(is.numeric(x)){
     print('This variable is numeric')
     print('mean')
-    print(mean(x))
+    print(mean(x, na.rm = TRUE))
     print('sd')
-    print(sd(x))
+    print(sd(x[!is.na(x)]))
   }
 }
 
@@ -281,10 +286,9 @@ mysummary <- function(x){
     print(table(x))
   }else if(is.numeric(x)){
     print('This variabele is numeric')
-    print('mean')
-    print(mean(x))
+    print(mean(x, na.rm = TRUE))
     print('sd')
-    print(sd(x))
+    print(sd(x[!is.na(x)]))
   }
 }
 mysummary(pregdata)
@@ -297,7 +301,7 @@ mysummary(pregdata)
 
 Here we will learn more about making graphics.
 
-## Histograms and boxplots
+### Histograms and boxplots
 
 One way to look at the distribution of a variable is by making a histigram. You can do this using the function `hist`. 
 
@@ -358,7 +362,7 @@ barplot(tab)
      
 ```
 
-## Scatterplots
+### Scatterplots
 
 When you want to look at the relation between two continuous variables we can make a scatter plot. In R this is done with the function `plot`. This function can be used in several ways but here we simply use the parameters `x` and `y` for to specify the variables we want to plot on the x and y axis respectively. 
 Try it out and make a scatterplot with the BMI of the mother on the x-axis and the birthweight on the y-axis. 
@@ -384,7 +388,7 @@ plot(BW ~ BMI_Mo, data = pregdata)
 ```
 
 It is possible to specify your own labels for the x and y-axis using the parameters `xlab` en `ylab`. The title can be specified using `main`. The colors and symbols that are used to plot the observations can be changed using `col` (try 'orange' ) and `pch` (try and set this to 2). 
-```{r scatter3, exercise = TRUE}
+```{r scatter3, exercise = TRUE, exercise.lines = 8}
 
 ```
 
@@ -400,7 +404,7 @@ plot(BW ~ BMI_Mo, data = pregdata,
 
 Now change the color of the symbols to lightblue for boys and pink for girls. Also use different plotting symbols.
 
-```{r scatter4, exercise = TRUE}
+```{r scatter4, exercise = TRUE,  exercise.lines = 11}
 
 ```
 
@@ -416,11 +420,13 @@ plot(BW ~ BMI_Mo, data = pregdata,
      main="Relation between birth weight and BMI Mother")
 ```
 
-```{r scatter5, exercise = TRUE}
+
+If BMI is above 30 the women are classified as Obese. Draw a reference line in the plot at this value using line type `lty=2` and line width `lwd=2`. In addition make the labels of the plot a little bigger using `cex.lab=1.2`.
+
+```{r scatter5, exercise = TRUE,  exercise.lines = 12}
 
 ```
 
-If BMI is above 30 the women are classified as Obese. Draw a reference line in the plot at this value using line type `lty=2` and line width `lwd=2`. In addition make the labels of the plot a little bigger using `cex.lab=1.2`.
 
 ```{r scatter5-solution, solution = TRUE}
 the_pch <- ifelse(pregdata$Sex=='boy', 16, 15)
