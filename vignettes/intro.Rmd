@@ -16,6 +16,9 @@ knitr::opts_chunk$set(
 )
 ```
 ## Why R
+
+R is just the best!!!!
+
 Currently R is the statistical package that of choice for statisticians. This popularity is due to the fact that it is focused on data analysis but it is also a complete programming language. This in contrast to on the one hand SPSS and SAS in which programming is very difficult to say the least and Python on the other hand which is a general programming language which is popular for data science but which not created for this purpose from the onset.  
 
 One characteristic of R that contributed to its popularity to a large extend is no doubt that the program is completely free of charge. Also its source code is publicly available and in the public domain. So, in principle, anybody can make changes to the language and suggest that these changes are also made to the public distribution. This also means that there is no publisher to whom to address  your questions. Fortunately there are enough other sources from which you can get support.
